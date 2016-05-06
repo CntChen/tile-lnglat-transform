@@ -1,4 +1,5 @@
 /*
+ * Created by CntChen 2016.05.04
  * 坐标相关参考文章：http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
  */
 
@@ -8,35 +9,41 @@ class TransformClassBaidu {
   constructor(levelRange_max, LevelRange_min) {
     this.levelMax = levelRange_max;
     this.levelMin = LevelRange_min;
+
+    this.projection = new BMap.MercatorProjection();
   }
 
-  lngLatToPoint(longitude, latitude) {
-    var projection = new BMap.MercatorProjection();
-    var lngLat = new BMap.Point(longitude, latitude);
-    var point = projection.lngLatToPoint(lngLat);
-    return point;
+  _getRetain(level) {
+    return Math.pow(2, (level - 18));
   }
 
-  pointToLngLat(pointX, pointY) {
-    var point = new BMap.Pixel(pointX, pointY);
-    var projection = new BMap.MercatorProjection();
-    var lngLat = projection.pointToLngLat(point);
-    return lngLat;
+  lnglatToPoint(longitude, latitude) {
+    let lnglat = new BMap.Point(longitude, latitude);
+    let point = this.projection.lngLatToPoint(lnglat);
+
+    return {
+      pointX: point.x,
+      pointY: point.y
+    };
+  }
+
+  pointToLnglat(pointX, pointY) {
+    let point = new BMap.Pixel(pointX, pointY);
+    let lnglat = this.projection.pointToLngLat(point);
+
+    return lnglat;
   }
 
   _lngToTileX(longitude, level) {
-    var projection = new BMap.MercatorProjection();
-    var lngLat = new BMap.Point(longitude, 0);
-    var pixel = projection.lngLatToPoint(lngLat);
-    var tileX = Math.floor(pixel.x * Math.pow(2, (level - 18)) / 256);
+    let point = this.lnglatToPoint(longitude, 0);
+    let tileX = Math.floor(point.pointX * this._getRetain(level) / 256);
+
     return tileX;
   }
 
-  _LatToTileY(latitude, level) {
-    var projection = new BMap.MercatorProjection();
-    var lngLat = new BMap.Point(0, latitude);
-    var pixel = projection.lngLatToPoint(lngLat);
-    var tileY = Math.floor(pixel.y * Math.pow(2, (level - 18)) / 256);
+  _latToTileY(latitude, level) {
+    let point = this.lnglatToPoint(0, latitude);
+    let tileY = Math.floor(point.pointY * this._getRetain(level) / 256);
 
     return tileY;
   }
@@ -44,70 +51,71 @@ class TransformClassBaidu {
   /*
    * 从经纬度获取某一级别瓦片编号
    */
-  lngLatToTileXY(longitude, latitude, level) {
+  lnglatToTile(longitude, latitude, level) {
+    let tileX = this._lngToTileX(longitude, level);
+    let tileY = this._latToTileY(latitude, level);
+
     return {
-      tileX: this.lngToTileX(longitude, level),
-      tileY: this.LatToTileY(latitude, level),
+      tileX,
+      tileY
     };
   }
 
   _lngToPixelX(longitude, level) {
-    var tileX = this._lngToTileX(longitude, tileX);
-    var projection = new BMap.MercatorProjection();
-    var longitudeLat = new BMap.Point(longitude, 0);
-    var pixel = projection.lngLatToPoint(lngLat);
-    var xPoint = Math.floor(pixel.x * Math.pow(2, (level - 18)) - tileX * 256);
-    return xPoint;
+    let tileX = this._lngToTileX(longitude, level);
+    let point = this.lnglatToPoint(longitude, 0);
+
+    console.log(point.pointX * this._getRetain(level) - tileX * 256);
+    console.log(Math.floor(point.pointX * this._getRetain(level) - tileX * 256));
+
+    let pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
+
+    return pixelX;
   }
 
-  _LatToPixelY(latitude, level) {
-    var tileY = this._LatToTileY(latitude, level);
-    var projection = new BMap.MercatorProjection();
-    var lngLat = new BMap.Point(0, latitude);
-    var pixel = projection.lngLatToPoint(lngLat);
-    var yPoint = Math.floor(pixel.y * Math.pow(2, (level - 18)) - tileY * 256);
-    return yPoint;
+  _latToPixelY(latitude, level) {
+    let tileY = this._latToTileY(latitude, level);
+    let point = this.lnglatToPoint(0, latitude);
+    let pixelY = Math.floor(point.pointY * this._getRetain(level) - tileY * 256);
+
+    return pixelY;
   }
 
-  lnglatToPixel(longitude, latitude){
+  lnglatToPixel(longitude, latitude, level) {
+    let pixelX = this._lngToPixelX(longitude, level);
+    let pixelY = this._latToPixelY(latitude, level);
+
     return {
-      pixelX: this._lngToPixelX(longitude, level),
-      pixelY: this._LatToPixelY(latitude, level),
-    }
+      pixelX,
+      pixelY
+    };
   }
 
-  _PixelXTolng(pixelX, tileX, level) {
-    var xPoint = (tileX * 256 + pixelX) * Math.pow(2, (18 - level));
-    var point = new BMap.Pixel(xPoint, 0);
-    var projection = new BMap.MercatorProjection();
-    var lngLat = projection.pointToLngLat(point);
-    return lngLat.lng;
+  _pixelXToLng(pixelX, tileX, level) {
+    let pointX = (tileX * 256 + pixelX) / this._getRetain(level);
+    let lnglat = this.pointToLnglat(pointX, 0);
+
+    return lnglat.lng;
   }
 
-  _PixelYToLat(pixelY, tileY, level) {
-    var yPoint = (tileY * 256 + pixelY) * Math.pow(2, (18 - level));
-    var point = new BMap.Pixel(0, yPoint);
-    var projection = new BMap.MercatorProjection();
-    var lngLat = projection.pointToLngLat(point);
-    return lngLat.lat;
+  _pixelYToLat(pixelY, tileY, level) {
+    let pointY = (tileY * 256 + pixelY) / this._getRetain(level);
+    let lnglat = this.pointToLnglat(0, pointY);
+
+    return lnglat.lat;
   }
 
   /*
    * 从某一瓦片的某一像素点到经纬度
    */
-  PixelXYTolngLat(pixelX, pixelY, tileX, tileY, level) {
-    var xPoint = (tileX * 256 + pixelX) * Math.pow(2, (18 - level));
-    var yPoint = (tileY * 256 + pixelY) * Math.pow(2, (18 - level));
-    var point = new BMap.Pixel(xPoint, yPoint);
-    var projection = new BMap.MercatorProjection();
-    var lngLat = projection.pointToLngLat(point);
-    return lngLat;
-  }
+  pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
+    let pointX = (tileX * 256 + pixelX) / this._getRetain(level);
+    let pointY = (tileY * 256 + pixelY) / this._getRetain(level);
+    console.log(pointX, pointY);
+    let lnglat = this.pointToLnglat(pointX, pointY);
 
-  GetRetain(level) {
-    return Math.pow(2, (18 - level));
+    return lnglat;
   }
-
 }
 
 export default TransformClassBaidu;

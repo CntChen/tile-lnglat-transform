@@ -5,6 +5,7 @@
  */
 
 // ----- baidu api start
+
 // util function
 function Extend(a, b) {
   for (var c in b) b.hasOwnProperty(c) && (a[c] = b[c]);
@@ -14,6 +15,15 @@ function Extend(a, b) {
 function S(a, b) {
   for (var c in b) a[c] = b[c]
 }
+
+function Xa(a) {
+  return "string" == typeof a
+}
+
+var j = void 0,
+  o = !0,
+  p = null,
+  q = !1;
 
 // Point
 function H(a, b) {
@@ -43,9 +53,17 @@ Q.prototype.lb = function(a) {
 };
 
 // MercatorProjection
+function fc() {}
+fc.prototype.nh = function() {
+  aa("lngLatToPoint\u65b9\u6cd5\u672a\u5b9e\u73b0")
+};
+fc.prototype.wi = function() {
+  aa("pointToLngLat\u65b9\u6cd5\u672a\u5b9e\u73b0")
+};
+
 function R() {}
 R.prototype = new fc;
-x.extend(R, {
+Extend(R, {
   $O: 6370996.81,
   lG: [1.289059486E7, 8362377.87, 5591021, 3481989.83, 1678043.12, 0],
   Au: [75, 60, 45, 30, 15, 0],
@@ -175,6 +193,7 @@ S(Je, {
   lngLatToPoint: Je.nh,
   pointToLngLat: Je.wi
 });
+
 // ----- baidu api end
 
 let BMap = {

@@ -61,6 +61,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.TileLnglatTransformBaidu = exports.TileLnglatTransformGoogle = exports.TileLnglatTransformGaode = undefined;
 
+	var _MapLevelRange;
+
 	var _transformClassNormal = __webpack_require__(1);
 
 	var _transformClassNormal2 = _interopRequireDefault(_transformClassNormal);
@@ -71,30 +73,34 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	/**
 	 * Created by CntChen 2016.04.30
 	 * 提供了百度地图、高德地图、谷歌地图经纬度坐标与瓦片坐标的相互转换
 	 */
 
-	var MapLevelRange = {
-	    Gaode: {
-	        min: 0,
-	        max: 18
-	    },
-	    Google: {
-	        min: 0,
-	        max: 20
-	    },
-	    Baidu: {
-	        min: 0,
-	        max: 19
-	    }
+	var MapTypes = {
+	    Gaode: 'Gaode',
+	    Google: 'Google',
+	    Baidu: 'Baidu'
 	};
 
-	var TileLnglatTransformGaode = new _transformClassNormal2.default(MapLevelRange[Gaode].max, MapLevelRange[Gaode].min);
-	var TileLnglatTransformGoogle = new _transformClassNormal2.default(MapLevelRange[Google].max, MapLevelRange[Google].min);
+	var MapLevelRange = (_MapLevelRange = {}, _defineProperty(_MapLevelRange, MapTypes.Gaode, {
+	    min: 1,
+	    max: 19
+	}), _defineProperty(_MapLevelRange, MapTypes.Google, {
+	    min: 0,
+	    max: 20
+	}), _defineProperty(_MapLevelRange, MapTypes.Baidu, {
+	    min: 0,
+	    max: 19
+	}), _MapLevelRange);
 
-	var TileLnglatTransformBaidu = new _transformClassBaidu2.default(MapLevelRange[Baidu].max, MapLevelRange[Google].min);
+	var TileLnglatTransformGaode = new _transformClassNormal2.default(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
+	var TileLnglatTransformGoogle = new _transformClassNormal2.default(MapLevelRange[MapTypes.Google].max, MapLevelRange[MapTypes.Google].min);
+
+	var TileLnglatTransformBaidu = new _transformClassBaidu2.default(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Google].min);
 
 	// uglifyJS时保持字段名称
 	exports.TileLnglatTransformGaode = TileLnglatTransformGaode;
@@ -131,6 +137,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.levelMin = LevelRange_min;
 	  }
 
+	  /*
+	   * 某一瓦片等级下瓦片地图X轴(Y轴)上的瓦片数目
+	   */
+
+
 	  _createClass(TransformClassNormal, [{
 	    key: "_mapSize",
 	    value: function _mapSize(level) {
@@ -140,15 +151,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_lngToTileX",
 	    value: function _lngToTileX(longitude, level) {
 	      var x = (longitude + 180) / 360;
-	      var tileX = Math.floor(x * _mapSize(level));
+	      var tileX = Math.floor(x * this._mapSize(level));
 	      return tileX;
 	    }
 	  }, {
-	    key: "_LatToTileY",
-	    value: function _LatToTileY(latitude, level) {
+	    key: "_latToTileY",
+	    value: function _latToTileY(latitude, level) {
 	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
 	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var tileY = Math.floor(y * _mapSize(level));
+	      var tileY = Math.floor(y * this._mapSize(level));
 	      return tileY;
 	    }
 
@@ -157,10 +168,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	  }, {
-	    key: "lngLatToTileXY",
-	    value: function lngLatToTileXY(longitude, latitude, level) {
+	    key: "lnglatToTile",
+	    value: function lnglatToTile(longitude, latitude, level) {
 	      var tileX = this._lngToTileX(longitude, level);
-	      var tileY = this._LatToTileY(latitude, level);
+	      var tileY = this._latToTileY(latitude, level);
 
 	      return {
 	        tileX: tileX,
@@ -171,15 +182,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_lngToPixelX",
 	    value: function _lngToPixelX(longitude, level) {
 	      var x = (longitude + 180) / 360;
-	      var pixelX = ~ ~(Math.floor(x * _mapSize(level) * 256) % 256);
+	      var pixelX = parseInt(x * this._mapSize(level) * 256 % 256);
+
 	      return pixelX;
 	    }
 	  }, {
-	    key: "_LatToPixelY",
-	    value: function _LatToPixelY(latitude, level) {
+	    key: "_latToPixelY",
+	    value: function _latToPixelY(latitude, level) {
 	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
 	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var pixelY = ~ ~(Math.floor(y * _mapSize(level) * 256) % 256);
+	      var pixelY = parseInt(y * this._mapSize(level) * 256 % 256);
+
 	      return pixelY;
 	    }
 
@@ -188,10 +201,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	  }, {
-	    key: "lngLatToPixelXY",
-	    value: function lngLatToPixelXY(longitude, latitude, level) {
+	    key: "lnglatToPixel",
+	    value: function lnglatToPixel(longitude, latitude, level) {
 	      var pixelX = this._lngToPixelX(longitude, level);
-	      var pixelY = this._LatToPixelY(latitude, level);
+	      var pixelY = this._latToPixelY(latitude, level);
 
 	      return {
 	        pixelX: pixelX,
@@ -199,16 +212,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    }
 	  }, {
-	    key: "_PixelXTolng",
-	    value: function _PixelXTolng(pixelX, tileX, level) {
+	    key: "_pixelXTolng",
+	    value: function _pixelXTolng(pixelX, tileX, level) {
 	      var pixelXToTileAddition = pixelX / 256.0;
-	      return (tileX + pixelXToTileAddition) / _mapSize(level) * 360 - 180;
+	      var lngitude = (tileX + pixelXToTileAddition) / this._mapSize(level) * 360 - 180;
+
+	      return lngitude;
 	    }
 	  }, {
-	    key: "_PixelYToLat",
-	    value: function _PixelYToLat(pixelY, tileY, level) {
+	    key: "_pixelYToLat",
+	    value: function _pixelYToLat(pixelY, tileY, level) {
 	      var pixelYToTileAddition = pixelY / 256.0;
-	      return Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / _mapSize(level)))) * 180.0 / Math.PI;
+	      var latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._mapSize(level)))) * 180.0 / Math.PI;
+
+	      return latitude;
 	    }
 
 	    /*
@@ -216,10 +233,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	  }, {
-	    key: "PixelXYTolngLat",
-	    value: function PixelXYTolngLat(pixelX, pixelY, tileX, tileY, level) {
-	      var lng = this._PixelXTolng(pixelX, tileX, level);
-	      var lat = this._PixelYToLat(pixelY, tileY, level);
+	    key: "pixelToLnglat",
+	    value: function pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
+	      var lng = this._pixelXTolng(pixelX, tileX, level);
+	      var lat = this._pixelYToLat(pixelY, tileY, level);
 
 	      return {
 	        lng: lng,
@@ -244,6 +261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by CntChen 2016.05.04
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 坐标相关参考文章：http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
@@ -261,40 +279,47 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    this.levelMax = levelRange_max;
 	    this.levelMin = LevelRange_min;
+
+	    this.projection = new _nodeBaidusdk2.default.MercatorProjection();
 	  }
 
 	  _createClass(TransformClassBaidu, [{
-	    key: 'lngLatToPoint',
-	    value: function lngLatToPoint(longitude, latitude) {
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = new _nodeBaidusdk2.default.Point(longitude, latitude);
-	      var point = projection.lngLatToPoint(lngLat);
-	      return point;
+	    key: '_getRetain',
+	    value: function _getRetain(level) {
+	      return Math.pow(2, level - 18);
 	    }
 	  }, {
-	    key: 'pointToLngLat',
-	    value: function pointToLngLat(pointX, pointY) {
+	    key: 'lnglatToPoint',
+	    value: function lnglatToPoint(longitude, latitude) {
+	      var lnglat = new _nodeBaidusdk2.default.Point(longitude, latitude);
+	      var point = this.projection.lngLatToPoint(lnglat);
+
+	      return {
+	        pointX: point.x,
+	        pointY: point.y
+	      };
+	    }
+	  }, {
+	    key: 'pointToLnglat',
+	    value: function pointToLnglat(pointX, pointY) {
 	      var point = new _nodeBaidusdk2.default.Pixel(pointX, pointY);
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = projection.pointToLngLat(point);
-	      return lngLat;
+	      var lnglat = this.projection.pointToLngLat(point);
+
+	      return lnglat;
 	    }
 	  }, {
 	    key: '_lngToTileX',
 	    value: function _lngToTileX(longitude, level) {
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = new _nodeBaidusdk2.default.Point(longitude, 0);
-	      var pixel = projection.lngLatToPoint(lngLat);
-	      var tileX = Math.floor(pixel.x * Math.pow(2, level - 18) / 256);
+	      var point = this.lnglatToPoint(longitude, 0);
+	      var tileX = Math.floor(point.pointX * this._getRetain(level) / 256);
+
 	      return tileX;
 	    }
 	  }, {
-	    key: '_LatToTileY',
-	    value: function _LatToTileY(latitude, level) {
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = new _nodeBaidusdk2.default.Point(0, latitude);
-	      var pixel = projection.lngLatToPoint(lngLat);
-	      var tileY = Math.floor(pixel.y * Math.pow(2, level - 18) / 256);
+	    key: '_latToTileY',
+	    value: function _latToTileY(latitude, level) {
+	      var point = this.lnglatToPoint(0, latitude);
+	      var tileY = Math.floor(point.pointY * this._getRetain(level) / 256);
 
 	      return tileY;
 	    }
@@ -304,58 +329,64 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	  }, {
-	    key: 'lngLatToTileXY',
-	    value: function lngLatToTileXY(longitude, latitude, level) {
+	    key: 'lnglatToTile',
+	    value: function lnglatToTile(longitude, latitude, level) {
+	      var tileX = this._lngToTileX(longitude, level);
+	      var tileY = this._latToTileY(latitude, level);
+
 	      return {
-	        tileX: this.lngToTileX(longitude, level),
-	        tileY: this.LatToTileY(latitude, level)
+	        tileX: tileX,
+	        tileY: tileY
 	      };
 	    }
 	  }, {
 	    key: '_lngToPixelX',
 	    value: function _lngToPixelX(longitude, level) {
-	      var tileX = this._lngToTileX(longitude, tileX);
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var longitudeLat = new _nodeBaidusdk2.default.Point(longitude, 0);
-	      var pixel = projection.lngLatToPoint(lngLat);
-	      var xPoint = Math.floor(pixel.x * Math.pow(2, level - 18) - tileX * 256);
-	      return xPoint;
+	      var tileX = this._lngToTileX(longitude, level);
+	      var point = this.lnglatToPoint(longitude, 0);
+
+	      console.log(point.pointX * this._getRetain(level) - tileX * 256);
+	      console.log(Math.floor(point.pointX * this._getRetain(level) - tileX * 256));
+
+	      var pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
+
+	      return pixelX;
 	    }
 	  }, {
-	    key: '_LatToPixelY',
-	    value: function _LatToPixelY(latitude, level) {
-	      var tileY = this._LatToTileY(latitude, level);
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = new _nodeBaidusdk2.default.Point(0, latitude);
-	      var pixel = projection.lngLatToPoint(lngLat);
-	      var yPoint = Math.floor(pixel.y * Math.pow(2, level - 18) - tileY * 256);
-	      return yPoint;
+	    key: '_latToPixelY',
+	    value: function _latToPixelY(latitude, level) {
+	      var tileY = this._latToTileY(latitude, level);
+	      var point = this.lnglatToPoint(0, latitude);
+	      var pixelY = Math.floor(point.pointY * this._getRetain(level) - tileY * 256);
+
+	      return pixelY;
 	    }
 	  }, {
 	    key: 'lnglatToPixel',
-	    value: function lnglatToPixel(longitude, latitude) {
+	    value: function lnglatToPixel(longitude, latitude, level) {
+	      var pixelX = this._lngToPixelX(longitude, level);
+	      var pixelY = this._latToPixelY(latitude, level);
+
 	      return {
-	        pixelX: this._lngToPixelX(longitude, level),
-	        pixelY: this._LatToPixelY(latitude, level)
+	        pixelX: pixelX,
+	        pixelY: pixelY
 	      };
 	    }
 	  }, {
-	    key: '_PixelXTolng',
-	    value: function _PixelXTolng(pixelX, tileX, level) {
-	      var xPoint = (tileX * 256 + pixelX) * Math.pow(2, 18 - level);
-	      var point = new _nodeBaidusdk2.default.Pixel(xPoint, 0);
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = projection.pointToLngLat(point);
-	      return lngLat.lng;
+	    key: '_pixelXToLng',
+	    value: function _pixelXToLng(pixelX, tileX, level) {
+	      var pointX = (tileX * 256 + pixelX) / this._getRetain(level);
+	      var lnglat = this.pointToLnglat(pointX, 0);
+
+	      return lnglat.lng;
 	    }
 	  }, {
-	    key: '_PixelYToLat',
-	    value: function _PixelYToLat(pixelY, tileY, level) {
-	      var yPoint = (tileY * 256 + pixelY) * Math.pow(2, 18 - level);
-	      var point = new _nodeBaidusdk2.default.Pixel(0, yPoint);
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = projection.pointToLngLat(point);
-	      return lngLat.lat;
+	    key: '_pixelYToLat',
+	    value: function _pixelYToLat(pixelY, tileY, level) {
+	      var pointY = (tileY * 256 + pixelY) / this._getRetain(level);
+	      var lnglat = this.pointToLnglat(0, pointY);
+
+	      return lnglat.lat;
 	    }
 
 	    /*
@@ -363,19 +394,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 	  }, {
-	    key: 'PixelXYTolngLat',
-	    value: function PixelXYTolngLat(pixelX, pixelY, tileX, tileY, level) {
-	      var xPoint = (tileX * 256 + pixelX) * Math.pow(2, 18 - level);
-	      var yPoint = (tileY * 256 + pixelY) * Math.pow(2, 18 - level);
-	      var point = new _nodeBaidusdk2.default.Pixel(xPoint, yPoint);
-	      var projection = new _nodeBaidusdk2.default.MercatorProjection();
-	      var lngLat = projection.pointToLngLat(point);
-	      return lngLat;
-	    }
-	  }, {
-	    key: 'GetRetain',
-	    value: function GetRetain(level) {
-	      return Math.pow(2, 18 - level);
+	    key: 'pixelToLnglat',
+	    value: function pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
+	      var pointX = (tileX * 256 + pixelX) / this._getRetain(level);
+	      var pointY = (tileY * 256 + pixelY) / this._getRetain(level);
+	      console.log(pointX, pointY);
+	      var lnglat = this.pointToLnglat(pointX, pointY);
+
+	      return lnglat;
 	    }
 	  }]);
 
@@ -400,6 +426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	// ----- baidu api start
+
 	// util function
 	function Extend(a, b) {
 	  for (var c in b) {
@@ -412,6 +439,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    a[c] = b[c];
 	  }
 	}
+
+	function Xa(a) {
+	  return "string" == typeof a;
+	}
+
+	var j = void 0,
+	    o = !0,
+	    p = null,
+	    q = !1;
 
 	// Point
 	function H(a, b) {
@@ -441,9 +477,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	// MercatorProjection
+	function fc() {}
+	fc.prototype.nh = function () {
+	  aa("lngLatToPoint方法未实现");
+	};
+	fc.prototype.wi = function () {
+	  aa("pointToLngLat方法未实现");
+	};
+
 	function R() {}
 	R.prototype = new fc();
-	x.extend(R, {
+	Extend(R, {
 	  $O: 6370996.81,
 	  lG: [1.289059486E7, 8362377.87, 5591021, 3481989.83, 1678043.12, 0],
 	  Au: [75, 60, 45, 30, 15, 0],
@@ -562,6 +606,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  lngLatToPoint: Je.nh,
 	  pointToLngLat: Je.wi
 	});
+
 	// ----- baidu api end
 
 	var BMap = {

@@ -13,29 +13,32 @@ class TransformClassNormal {
     this.levelMin = LevelRange_min;
   }
 
+  /*
+   * 某一瓦片等级下瓦片地图X轴(Y轴)上的瓦片数目
+   */
   _mapSize(level) {
     return Math.pow(2, level);
   }
 
   _lngToTileX(longitude, level) {
     let x = (longitude + 180) / 360;
-    let tileX = Math.floor(x * _mapSize(level));
+    let tileX = Math.floor(x * this._mapSize(level));
     return tileX;
   }
 
-  _LatToTileY(latitude, level) {
+  _latToTileY(latitude, level) {
     let sinLatitude = Math.sin(latitude * Math.PI / 180);
     let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-    let tileY = Math.floor(y * _mapSize(level));
+    let tileY = Math.floor(y * this._mapSize(level));
     return tileY;
   }
 
   /*
    * 从经纬度获取某一级别瓦片坐标编号
    */
-  lngLatToTileXY(longitude, latitude, level) {
+  lnglatToTile(longitude, latitude, level) {
     let tileX = this._lngToTileX(longitude, level);
-    let tileY = this._LatToTileY(latitude, level)
+    let tileY = this._latToTileY(latitude, level)
 
     return {
       tileX,
@@ -45,23 +48,25 @@ class TransformClassNormal {
 
   _lngToPixelX(longitude, level) {
     let x = (longitude + 180) / 360;
-    let pixelX = ~~(Math.floor(x * _mapSize(level) * 256) % 256);
+    let pixelX = parseInt(x * this._mapSize(level) * 256 % 256);
+    
     return pixelX;
   }
 
-  _LatToPixelY(latitude, level) {
+  _latToPixelY(latitude, level) {
     let sinLatitude = Math.sin(latitude * Math.PI / 180);
     let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-    let pixelY = ~~(Math.floor(y * _mapSize(level) * 256) % 256);
+    let pixelY = parseInt(y * this._mapSize(level) * 256 % 256);
+    
     return pixelY;
   }
 
   /*
    * 从经纬度获取点在某一级别瓦片中的像素坐标
    */
-  lngLatToPixelXY(longitude, latitude, level) {
+  lnglatToPixel(longitude, latitude, level) {
     let pixelX = this._lngToPixelX(longitude, level);
-    let pixelY = this._LatToPixelY(latitude, level);
+    let pixelY = this._latToPixelY(latitude, level);
 
     return {
       pixelX,
@@ -69,22 +74,26 @@ class TransformClassNormal {
     };
   }
 
-  _PixelXTolng(pixelX, tileX, level) {
+  _pixelXTolng(pixelX, tileX, level) {
     let pixelXToTileAddition = pixelX / 256.0;
-    return (tileX + pixelXToTileAddition) / _mapSize(level) * 360 - 180;
+    let lngitude = (tileX + pixelXToTileAddition) / this._mapSize(level) * 360 - 180;
+    
+    return lngitude;
   }
 
-  _PixelYToLat(pixelY, tileY, level) {
+  _pixelYToLat(pixelY, tileY, level) {
     let pixelYToTileAddition = pixelY / 256.0;
-    return Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / _mapSize(level)))) * 180.0 / Math.PI;
+    let latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._mapSize(level)))) * 180.0 / Math.PI;
+    
+    return latitude;
   }
 
   /*
    * 从某一瓦片的某一像素点到经纬度
    */
-  PixelXYTolngLat(pixelX, pixelY, tileX, tileY, level) {
-    let lng = this._PixelXTolng(pixelX, tileX, level);
-    let lat = this._PixelYToLat(pixelY, tileY, level);
+  pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
+    let lng = this._pixelXTolng(pixelX, tileX, level);
+    let lat = this._pixelYToLat(pixelY, tileY, level);
 
     return {
       lng,

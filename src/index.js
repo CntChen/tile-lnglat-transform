@@ -3,27 +3,33 @@
  * 提供了百度地图、高德地图、谷歌地图经纬度坐标与瓦片坐标的相互转换
  */
 
+const MapTypes = {
+    Gaode: 'Gaode',
+    Google: 'Google',
+    Baidu: 'Baidu',
+};
+
 const MapLevelRange = {
-    Gaode: {
-        min: 0,
-        max: 18,
+    [MapTypes.Gaode]: {
+        min: 1,
+        max: 19,
     },
-    Google: {
+    [MapTypes.Google]: {
         min: 0,
         max: 20,
     },
-    Baidu: {
+    [MapTypes.Baidu]: {
         min: 0,
         max: 19,
     },
 };
 
 import TransformClassNormal from './transform-class-normal';
-let TileLnglatTransformGaode = new TransformClassNormal(MapLevelRange[Gaode].max, MapLevelRange[Gaode].min);
-let TileLnglatTransformGoogle = new TransformClassNormal(MapLevelRange[Google].max, MapLevelRange[Google].min);
+let TileLnglatTransformGaode = new TransformClassNormal(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
+let TileLnglatTransformGoogle = new TransformClassNormal(MapLevelRange[MapTypes.Google].max, MapLevelRange[MapTypes.Google].min);
 
 import TransformClassBaidu from './transform-class-baidu';
-let TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[Baidu].max, MapLevelRange[Google].min);
+let TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Google].min);
 
 // uglifyJS时保持字段名称
 export {
