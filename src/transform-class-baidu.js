@@ -17,6 +17,9 @@ class TransformClassBaidu {
     return Math.pow(2, (level - 18));
   }
 
+  /*
+   * 从经纬度到百度平面坐标
+   */
   lnglatToPoint(longitude, latitude) {
     let lnglat = new BMap.Point(longitude, latitude);
     let point = this.projection.lngLatToPoint(lnglat);
@@ -27,11 +30,17 @@ class TransformClassBaidu {
     };
   }
 
+  /*
+   * 从百度平面坐标到经纬度
+   */
   pointToLnglat(pointX, pointY) {
     let point = new BMap.Pixel(pointX, pointY);
     let lnglat = this.projection.pointToLngLat(point);
 
-    return lnglat;
+    return {
+      lng: lnglat.lng,
+      lat: lnglat.lat
+    };
   }
 
   _lngToTileX(longitude, level) {
@@ -64,10 +73,6 @@ class TransformClassBaidu {
   _lngToPixelX(longitude, level) {
     let tileX = this._lngToTileX(longitude, level);
     let point = this.lnglatToPoint(longitude, 0);
-
-    console.log(point.pointX * this._getRetain(level) - tileX * 256);
-    console.log(Math.floor(point.pointX * this._getRetain(level) - tileX * 256));
-
     let pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
 
     return pixelX;
@@ -81,6 +86,9 @@ class TransformClassBaidu {
     return pixelY;
   }
 
+  /*
+   * 从经纬度到瓦片的像素坐标
+   */
   lnglatToPixel(longitude, latitude, level) {
     let pixelX = this._lngToPixelX(longitude, level);
     let pixelY = this._latToPixelY(latitude, level);
@@ -111,7 +119,6 @@ class TransformClassBaidu {
   pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
     let pointX = (tileX * 256 + pixelX) / this._getRetain(level);
     let pointY = (tileY * 256 + pixelY) / this._getRetain(level);
-    console.log(pointX, pointY);
     let lnglat = this.pointToLnglat(pointX, pointY);
 
     return lnglat;

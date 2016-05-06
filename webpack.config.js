@@ -23,7 +23,7 @@ module.exports = {
     path: 'builds/',
     filename: 'index.js',
     libraryTarget: "umd",
-    library: 'TileLnglatTransfrom',
+    library: 'TileLnglatTransform',
   },
   plugins: plugins,
   module: {

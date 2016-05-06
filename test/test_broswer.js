@@ -3,8 +3,7 @@
  * write by ES5
  */
 
-var TileLnglatTransform = require('../builds/index');
-
+// TileLnglatTransform 已经作为全局变量引入
 var TileLnglatTransformGaode = TileLnglatTransform.TileLnglatTransformGaode;
 var TileLnglatTransformGoogle = TileLnglatTransform.TileLnglatTransformGoogle;
 var TileLnglatTransformBaidu = TileLnglatTransform.TileLnglatTransformBaidu;
@@ -15,6 +14,8 @@ var lnglat = {
 };
 var level = 15;
 
+// test for Gaode map
+// Google map work like Gaode map
 console.log('Gaode map test:');
 console.log('input lnglat:', lnglat, '\n', 'map level:', level);
 var tile_gaode = TileLnglatTransformGaode.lnglatToTile(lnglat.lng, lnglat.lat, level);
@@ -25,21 +26,20 @@ console.log('to pixel result:', pixel_gaode);
 var lnglat_gaode = TileLnglatTransformGaode.pixelToLnglat(pixel_gaode.pixelX, pixel_gaode.pixelY, tile_gaode.tileX, tile_gaode.tileY, level);
 console.log('to lnglat result:', lnglat_gaode);
 
-// Google map work like Gaode map
 
+// test for Baidu map
 // test data from http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
 // lnglat = {
 //   lng: 116.404, 
 //   lat: 39.915
 // }
 // level = 4;
-
 console.log('Baidu map test:');
 console.log('input lnglat:', lnglat, '\n', 'map level:', level);
 var point_baidu = TileLnglatTransformBaidu.lnglatToPoint(lnglat.lng, lnglat.lat);
 console.log('to point result:', point_baidu);
 var lnglat_frompoint_baidu = TileLnglatTransformBaidu.pointToLnglat(point_baidu.pointX, point_baidu.pointY);
-console.log('to lnglat result:', lnglat_frompoint_baidu);
+console.log('to lnglat from point result:', lnglat_frompoint_baidu);
 var tile_baidu = TileLnglatTransformBaidu.lnglatToTile(lnglat.lng, lnglat.lat, level);
 console.log('to tile result:', tile_baidu);
 console.log('verify url: http://online1.map.bdimg.com/onlinelabel/?qt=tile&x='+tile_baidu.tileX+'&y='+tile_baidu.tileY+'&z='+level);

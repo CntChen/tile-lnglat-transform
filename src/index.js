@@ -16,11 +16,11 @@ const MapLevelRange = {
     },
     [MapTypes.Google]: {
         min: 0,
-        max: 20,
+        max: 21,
     },
     [MapTypes.Baidu]: {
-        min: 0,
-        max: 19,
+        min: 3,
+        max: 18,
     },
 };
 

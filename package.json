@@ -4,7 +4,8 @@
   "description": "tile coordinate and lnglat coordinate transform module",
   "main": "./builds/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test_node": "node test/test_node"
   },
   "author": "CntChen",
   "license": "MIT",

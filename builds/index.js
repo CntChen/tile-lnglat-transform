@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["TileLnglatTransfrom"] = factory();
+		exports["TileLnglatTransform"] = factory();
 	else
-		root["TileLnglatTransfrom"] = factory();
+		root["TileLnglatTransform"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -91,10 +91,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    max: 19
 	}), _defineProperty(_MapLevelRange, MapTypes.Google, {
 	    min: 0,
-	    max: 20
+	    max: 21
 	}), _defineProperty(_MapLevelRange, MapTypes.Baidu, {
-	    min: 0,
-	    max: 19
+	    min: 3,
+	    max: 18
 	}), _MapLevelRange);
 
 	var TileLnglatTransformGaode = new _transformClassNormal2.default(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
@@ -288,6 +288,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _getRetain(level) {
 	      return Math.pow(2, level - 18);
 	    }
+
+	    /*
+	     * 从经纬度到百度平面坐标
+	     */
+
 	  }, {
 	    key: 'lnglatToPoint',
 	    value: function lnglatToPoint(longitude, latitude) {
@@ -299,13 +304,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        pointY: point.y
 	      };
 	    }
+
+	    /*
+	     * 从百度平面坐标到经纬度
+	     */
+
 	  }, {
 	    key: 'pointToLnglat',
 	    value: function pointToLnglat(pointX, pointY) {
 	      var point = new _nodeBaidusdk2.default.Pixel(pointX, pointY);
 	      var lnglat = this.projection.pointToLngLat(point);
 
-	      return lnglat;
+	      return {
+	        lng: lnglat.lng,
+	        lat: lnglat.lat
+	      };
 	    }
 	  }, {
 	    key: '_lngToTileX',
@@ -344,10 +357,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _lngToPixelX(longitude, level) {
 	      var tileX = this._lngToTileX(longitude, level);
 	      var point = this.lnglatToPoint(longitude, 0);
-
-	      console.log(point.pointX * this._getRetain(level) - tileX * 256);
-	      console.log(Math.floor(point.pointX * this._getRetain(level) - tileX * 256));
-
 	      var pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
 
 	      return pixelX;
@@ -361,6 +370,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      return pixelY;
 	    }
+
+	    /*
+	     * 从经纬度到瓦片的像素坐标
+	     */
+
 	  }, {
 	    key: 'lnglatToPixel',
 	    value: function lnglatToPixel(longitude, latitude, level) {
@@ -398,7 +412,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
 	      var pointX = (tileX * 256 + pixelX) / this._getRetain(level);
 	      var pointY = (tileY * 256 + pixelY) / this._getRetain(level);
-	      console.log(pointX, pointY);
 	      var lnglat = this.pointToLnglat(pointX, pointY);
 
 	      return lnglat;
