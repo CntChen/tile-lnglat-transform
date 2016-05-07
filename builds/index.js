@@ -123,6 +123,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/*
 	 * Created by CntChen 2016.04.30
+	 * 参考资料：http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 	 */
 
 	function _Math_sinh(x) {
@@ -143,23 +144,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 	  _createClass(TransformClassNormal, [{
-	    key: "_mapSize",
-	    value: function _mapSize(level) {
+	    key: "_getMapSize",
+	    value: function _getMapSize(level) {
 	      return Math.pow(2, level);
+	    }
+
+	    /*
+	     * 分辨率，表示某一瓦片等级下瓦片一个像素点代表的真实距离(m)
+	     */
+
+	  }, {
+	    key: "getResolution",
+	    value: function getResolution(level) {
+	      var resolution = 40075.016686 * 1000 / 256 / this._getMapSize();
+
+	      return resolution;
 	    }
 	  }, {
 	    key: "_lngToTileX",
 	    value: function _lngToTileX(longitude, level) {
 	      var x = (longitude + 180) / 360;
-	      var tileX = Math.floor(x * this._mapSize(level));
+	      var tileX = Math.floor(x * this._getMapSize(level));
 	      return tileX;
 	    }
 	  }, {
 	    key: "_latToTileY",
 	    value: function _latToTileY(latitude, level) {
-	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
-	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var tileY = Math.floor(y * this._mapSize(level));
+	      var lat_rad = latitude * Math.PI / 180;
+	      var y = (1 - Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI) / 2;
+	      var tileY = Math.floor(y * this._getMapSize(level));
+
+	      // 代替性算法,使用了一些三角变化，其实完全等价
+	      //let sinLatitude = Math.sin(latitude * Math.PI / 180);
+	      //let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+	      //let tileY = Math.floor(y * this._getMapSize(level));
+
 	      return tileY;
 	    }
 
@@ -182,7 +201,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_lngToPixelX",
 	    value: function _lngToPixelX(longitude, level) {
 	      var x = (longitude + 180) / 360;
-	      var pixelX = parseInt(x * this._mapSize(level) * 256 % 256);
+	      var pixelX = Math.round(x * this._getMapSize(level) * 256 % 256);
 
 	      return pixelX;
 	    }
@@ -191,7 +210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _latToPixelY(latitude, level) {
 	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
 	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var pixelY = parseInt(y * this._mapSize(level) * 256 % 256);
+	      var pixelY = Math.round(y * this._getMapSize(level) * 256 % 256);
 
 	      return pixelY;
 	    }
@@ -215,7 +234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_pixelXTolng",
 	    value: function _pixelXTolng(pixelX, tileX, level) {
 	      var pixelXToTileAddition = pixelX / 256.0;
-	      var lngitude = (tileX + pixelXToTileAddition) / this._mapSize(level) * 360 - 180;
+	      var lngitude = (tileX + pixelXToTileAddition) / this._getMapSize(level) * 360 - 180;
 
 	      return lngitude;
 	    }
@@ -223,7 +242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_pixelYToLat",
 	    value: function _pixelYToLat(pixelY, tileY, level) {
 	      var pixelYToTileAddition = pixelY / 256.0;
-	      var latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._mapSize(level)))) * 180.0 / Math.PI;
+	      var latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
 
 	      return latitude;
 	    }

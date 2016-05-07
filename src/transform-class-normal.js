@@ -1,5 +1,6 @@
 /*
  * Created by CntChen 2016.04.30
+ * 参考资料：http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
  */
 
 function _Math_sinh(x) {
@@ -16,20 +17,36 @@ class TransformClassNormal {
   /*
    * 某一瓦片等级下瓦片地图X轴(Y轴)上的瓦片数目
    */
-  _mapSize(level) {
+  _getMapSize(level) {
     return Math.pow(2, level);
+  }
+
+  /*
+   * 分辨率，表示某一瓦片等级下瓦片一个像素点代表的真实距离(m)
+   */
+  getResolution(level){
+    let resolution = 40075.016686 * 1000 / 256 / this._getMapSize();
+
+    return resolution;
   }
 
   _lngToTileX(longitude, level) {
     let x = (longitude + 180) / 360;
-    let tileX = Math.floor(x * this._mapSize(level));
+    let tileX = Math.floor(x * this._getMapSize(level));
     return tileX;
   }
 
   _latToTileY(latitude, level) {
-    let sinLatitude = Math.sin(latitude * Math.PI / 180);
-    let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-    let tileY = Math.floor(y * this._mapSize(level));
+    let lat_rad = latitude * Math.PI / 180;
+    let y = (1 - Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI)/2;
+    let tileY = Math.floor(y * this._getMapSize(level));
+    
+
+    // 代替性算法,使用了一些三角变化，其实完全等价
+    //let sinLatitude = Math.sin(latitude * Math.PI / 180);
+    //let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+    //let tileY = Math.floor(y * this._getMapSize(level));
+
     return tileY;
   }
 
@@ -48,16 +65,16 @@ class TransformClassNormal {
 
   _lngToPixelX(longitude, level) {
     let x = (longitude + 180) / 360;
-    let pixelX = parseInt(x * this._mapSize(level) * 256 % 256);
-    
+    let pixelX = Math.round(x * this._getMapSize(level) * 256 % 256);
+
     return pixelX;
   }
 
   _latToPixelY(latitude, level) {
     let sinLatitude = Math.sin(latitude * Math.PI / 180);
     let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-    let pixelY = parseInt(y * this._mapSize(level) * 256 % 256);
-    
+    let pixelY = Math.round(y * this._getMapSize(level) * 256 % 256);
+
     return pixelY;
   }
 
@@ -76,15 +93,15 @@ class TransformClassNormal {
 
   _pixelXTolng(pixelX, tileX, level) {
     let pixelXToTileAddition = pixelX / 256.0;
-    let lngitude = (tileX + pixelXToTileAddition) / this._mapSize(level) * 360 - 180;
-    
+    let lngitude = (tileX + pixelXToTileAddition) / this._getMapSize(level) * 360 - 180;
+
     return lngitude;
   }
 
   _pixelYToLat(pixelY, tileY, level) {
     let pixelYToTileAddition = pixelY / 256.0;
-    let latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._mapSize(level)))) * 180.0 / Math.PI;
-    
+    let latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
+
     return latitude;
   }
 
