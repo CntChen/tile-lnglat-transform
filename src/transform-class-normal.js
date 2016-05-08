@@ -25,7 +25,7 @@ class TransformClassNormal {
    * 分辨率，表示某一瓦片等级下瓦片一个像素点代表的真实距离(m)
    */
   getResolution(level){
-    let resolution = 40075.016686 * 1000 / 256 / this._getMapSize();
+    let resolution = 40075.016686 * 1000 / 256 / this._getMapSize(level);
 
     return resolution;
   }
@@ -41,7 +41,6 @@ class TransformClassNormal {
     let y = (1 - Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI)/2;
     let tileY = Math.floor(y * this._getMapSize(level));
     
-
     // 代替性算法,使用了一些三角变化，其实完全等价
     //let sinLatitude = Math.sin(latitude * Math.PI / 180);
     //let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);

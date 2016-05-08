@@ -24,6 +24,7 @@ class TransformClassBaidu {
     let lnglat = new BMap.Point(longitude, latitude);
     let point = this.projection.lngLatToPoint(lnglat);
 
+    // 提取对象的字段并返回
     return {
       pointX: point.x,
       pointY: point.y
@@ -36,7 +37,9 @@ class TransformClassBaidu {
   pointToLnglat(pointX, pointY) {
     let point = new BMap.Pixel(pointX, pointY);
     let lnglat = this.projection.pointToLngLat(point);
-
+ 
+    // 不直接返回lnglat对象，因为该对象在百SDK中还有其他属性和方法
+    // 提取对象的字段后，与其他地图平台统一Lnglat的格式
     return {
       lng: lnglat.lng,
       lat: lnglat.lat
@@ -73,7 +76,7 @@ class TransformClassBaidu {
   _lngToPixelX(longitude, level) {
     let tileX = this._lngToTileX(longitude, level);
     let point = this.lnglatToPoint(longitude, 0);
-    let pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
+    let pixelX = Math.round(point.pointX * this._getRetain(level) - tileX * 256);
 
     return pixelX;
   }
@@ -81,7 +84,7 @@ class TransformClassBaidu {
   _latToPixelY(latitude, level) {
     let tileY = this._latToTileY(latitude, level);
     let point = this.lnglatToPoint(0, latitude);
-    let pixelY = Math.floor(point.pointY * this._getRetain(level) - tileY * 256);
+    let pixelY = Math.round(point.pointY * this._getRetain(level) - tileY * 256);
 
     return pixelY;
   }

@@ -35,6 +35,7 @@ console.log('to lnglat result:', lnglat_gaode);
 //   lat: 39.915
 // }
 // level = 4;
+
 console.log('Baidu map test:');
 console.log('input lnglat:', lnglat, '\n', 'map level:', level);
 var point_baidu = TileLnglatTransformBaidu.lnglatToPoint(lnglat.lng, lnglat.lat);
@@ -49,3 +50,13 @@ console.log('to pixel result:', pixel_baidu);
 var lnglat_baidu = TileLnglatTransformBaidu.pixelToLnglat(pixel_baidu.pixelX, pixel_baidu.pixelY, tile_baidu.tileX, tile_baidu.tileY, level);
 console.log('to lnglat result:', lnglat_baidu);
 
+console.log('百度纬度坐标为负数时的测试情况：');
+lnglat = {
+  lng: lnglat.lng, 
+  lat: -lnglat.lat
+}
+console.log('input lnglat:', lnglat, '\n', 'map level:', level);
+point_baidu = TileLnglatTransformBaidu.lnglatToPoint(lnglat.lng, -lnglat.lat);
+console.log('to point result:', point_baidu);
+lnglat_frompoint_baidu = TileLnglatTransformBaidu.pointToLnglat(point_baidu.pointX, point_baidu.pointY);
+console.log('to lnglat from point result:', lnglat_frompoint_baidu);

@@ -156,7 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "getResolution",
 	    value: function getResolution(level) {
-	      var resolution = 40075.016686 * 1000 / 256 / this._getMapSize();
+	      var resolution = 40075.016686 * 1000 / 256 / this._getMapSize(level);
 
 	      return resolution;
 	    }
@@ -318,6 +318,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var lnglat = new _nodeBaidusdk2.default.Point(longitude, latitude);
 	      var point = this.projection.lngLatToPoint(lnglat);
 
+	      // 提取对象的字段并返回
 	      return {
 	        pointX: point.x,
 	        pointY: point.y
@@ -334,6 +335,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var point = new _nodeBaidusdk2.default.Pixel(pointX, pointY);
 	      var lnglat = this.projection.pointToLngLat(point);
 
+	      // 不直接返回lnglat对象，因为该对象在百SDK中还有其他属性和方法
+	      // 提取对象的字段后，与其他地图平台统一Lnglat的格式
 	      return {
 	        lng: lnglat.lng,
 	        lat: lnglat.lat
@@ -376,7 +379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _lngToPixelX(longitude, level) {
 	      var tileX = this._lngToTileX(longitude, level);
 	      var point = this.lnglatToPoint(longitude, 0);
-	      var pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
+	      var pixelX = Math.round(point.pointX * this._getRetain(level) - tileX * 256);
 
 	      return pixelX;
 	    }
@@ -385,7 +388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _latToPixelY(latitude, level) {
 	      var tileY = this._latToTileY(latitude, level);
 	      var point = this.lnglatToPoint(0, latitude);
-	      var pixelY = Math.floor(point.pointY * this._getRetain(level) - tileY * 256);
+	      var pixelY = Math.round(point.pointY * this._getRetain(level) - tileY * 256);
 
 	      return pixelY;
 	    }
@@ -455,6 +458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Created by CntChen 2016.05.04
 	 * 从百度JavaScritp API v2.0 抽取代码,并作少量命名修改
 	 * http://lbsyun.baidu.com/index.php?title=jspopular
+	 * http://api.map.baidu.com/getscript?v=2.0&ak=E4805d16520de693a3fe707cdc962045&t=20160503160001
 	 */
 
 	// ----- baidu api start
@@ -567,12 +571,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	        c = this.iG[d];
 	        break;
 	      }
-	    }if (!c) for (d = this.Au.length - 1; 0 <= d; d--) {
+	    } // 对疑似bug的修改 start by CntChen 2016.05.08
+	    if (!c) for (d = 0; d < this.Au.length; d++) {
 	      if (b.lat <= -this.Au[d]) {
 	        c = this.iG[d];
 	        break;
 	      }
-	    }a = this.gK(a, c);
+	    } // 对疑似bug的修改 end
+
+	    // Baidu javaScript 中原本代码, 2016.05.08依然如此
+	    // if (!c)
+	    //   for (d = this.Au.length - 1; 0 <= d; d--)
+	    //     if (b.lat <= -this.Au[d]) {
+	    //       c = this.iG[d];
+	    //       break
+	    //     }
+	    // Baidu javaScript 中原本代码 end
+
+	    a = this.gK(a, c);
 	    return a = new H(a.lng.toFixed(2), a.lat.toFixed(2));
 	  },
 	  gK: function gK(a, b) {
