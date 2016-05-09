@@ -13,6 +13,8 @@
 
 1. 安装
     ```
+    $ npm tile-lnglat-transform
+    // 或
     $ npm install git://github.com/CntChen/tile-lnglat-transform.git
     ```
 
