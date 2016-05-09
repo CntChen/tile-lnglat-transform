@@ -150,14 +150,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /*
-	     * 分辨率，表示某一瓦片等级下瓦片一个像素点代表的真实距离(m)
+	     * 分辨率，表示水平方向上一个像素点代表的真实距离(m)
 	     */
 
 	  }, {
 	    key: "getResolution",
-	    value: function getResolution(level) {
-	      var resolution = 40075.016686 * 1000 / 256 / this._getMapSize(level);
-
+	    value: function getResolution(latitude, level) {
+	      var resolution = 6378137.0 * 2 * Math.PI * Math.cos(latitude) / 256 / this._getMapSize(level);
 	      return resolution;
 	    }
 	  }, {
@@ -306,6 +305,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_getRetain',
 	    value: function _getRetain(level) {
 	      return Math.pow(2, level - 18);
+	    }
+
+	    /*
+	     * 分辨率，表示水平方向上一个像素点代表的真实距离(m)
+	     * 百度地图18级时的平面坐标就是地图距离原点的距离(m)
+	     * 使用{lng:180, lat:0}时候的pointX是否等于地球赤道长一半来验证
+	     */
+
+	  }, {
+	    key: 'getResolution',
+	    value: function getResolution(latitude, level) {
+	      return Math.pow(2, 18 - level) * Math.cos(latitude);
 	    }
 
 	    /*
@@ -461,7 +472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * http://api.map.baidu.com/getscript?v=2.0&ak=E4805d16520de693a3fe707cdc962045&t=20160503160001
 	 */
 
-	// ----- baidu api start
+	// ----- Baidu API start
 
 	// util function
 	function Extend(a, b) {
@@ -571,7 +582,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        c = this.iG[d];
 	        break;
 	      }
-	    } // 对疑似bug的修改 start by CntChen 2016.05.08
+	    } // 对疑似bug的修改 start
+	    // by CntChen 2016.05.08
 	    if (!c) for (d = 0; d < this.Au.length; d++) {
 	      if (b.lat <= -this.Au[d]) {
 	        c = this.iG[d];
@@ -579,14 +591,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    } // 对疑似bug的修改 end
 
-	    // Baidu javaScript 中原本代码, 2016.05.08依然如此
+	    // Baidu JavaScript 中原本代码, 2016.05.08依然如此
 	    // if (!c)
 	    //   for (d = this.Au.length - 1; 0 <= d; d--)
 	    //     if (b.lat <= -this.Au[d]) {
 	    //       c = this.iG[d];
 	    //       break
 	    //     }
-	    // Baidu javaScript 中原本代码 end
+	    // Baidu JavaScript 中原本代码 end
 
 	    a = this.gK(a, c);
 	    return a = new H(a.lng.toFixed(2), a.lat.toFixed(2));
@@ -655,7 +667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  pointToLngLat: Je.wi
 	});
 
-	// ----- baidu api end
+	// ----- Baidu API end
 
 	var BMap = {
 	  Point: H,

@@ -18,6 +18,15 @@ class TransformClassBaidu {
   }
 
   /*
+   * 分辨率，表示水平方向上一个像素点代表的真实距离(m)
+   * 百度地图18级时的平面坐标就是地图距离原点的距离(m)
+   * 使用{lng:180, lat:0}时候的pointX是否等于地球赤道长一半来验证
+   */
+  getResolution(latitude, level){
+    return Math.pow(2, (18 - level)) * Math.cos(latitude);
+  }
+
+  /*
    * 从经纬度到百度平面坐标
    */
   lnglatToPoint(longitude, latitude) {

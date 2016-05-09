@@ -22,11 +22,10 @@ class TransformClassNormal {
   }
 
   /*
-   * 分辨率，表示某一瓦片等级下瓦片一个像素点代表的真实距离(m)
+   * 分辨率，表示水平方向上一个像素点代表的真实距离(m)
    */
-  getResolution(level){
-    let resolution = 40075.016686 * 1000 / 256 / this._getMapSize(level);
-
+  getResolution(latitude, level){
+    let resolution = 6378137.0 * 2 * Math.PI * Math.cos(latitude) / 256 / this._getMapSize(level);
     return resolution;
   }
 
