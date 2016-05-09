@@ -12,19 +12,18 @@
 *以node中使用为例。*
 
 1. 安装
-```
-$ npm install git://github.com/CntChen/tile-lnglat-transform.git
-```
-
+    ```
+    $ npm install git://github.com/CntChen/tile-lnglat-transform.git
+    ```
 2. 使用
-```
-// 引入模块
-var TileLnglatTransform = require('tile-lnglat-transform');
-// 根据地图平台使用转换类
-var TileLnglatTransformGaode = TileLnglatTransform.TileLnglatTransformGaode;
-var TileLnglatTransformGoogle = TileLnglatTransform.TileLnglatTransformGoogle;
-var TileLnglatTransformBaidu = TileLnglatTransform.TileLnglatTransformBaidu;
-```
+    ```
+    // 引入模块
+    var TileLnglatTransform = require('tile-lnglat-transform');
+    // 根据地图平台使用转换类
+    var TileLnglatTransformGaode = TileLnglatTransform.TileLnglatTransformGaode;
+    var TileLnglatTransformGoogle = TileLnglatTransform.TileLnglatTransformGoogle;
+    var TileLnglatTransformBaidu = TileLnglatTransform.TileLnglatTransformBaidu;
+    ```
 
 ## 文档
 
@@ -121,17 +120,18 @@ httponline1.map.bdimg.comonlinelabelqt=tile&x=6163&y=1280&z=15.png
 1. Fork 并 clone项目
 
 2. 安装依赖
-```
-$ npm install
-```
+
+    ```
+    $ npm install
+    ```
 
 3. 修改代码或添加模块
 参考 `/src/`中的代码
 
 4. 打包为UMD模块，打包结果路径为`/builds/index.js`
-```
-$ webpack
-```
+    ```
+    $ webpack
+    ```
 
 5. Pull request
 
