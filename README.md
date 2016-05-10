@@ -42,16 +42,19 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 * 经纬度坐标转瓦片坐标 `lnglatToTile`
 
 @input: `(longitude, latitude, level)`
+
 @output:`{tileX, tileY}`
 
 * 经纬度坐标转像素坐标 `lnglatToPixel`
 
 @input: `(longitude, latitude, level)`
+
 @output:`{pixelX, pixelY}`
 
 * 瓦片的某一像素点坐标转经纬度坐标 `pixelToLnglat`
 
 @input: `(pixelX, pixelY, tileX, tileY, level)`
+
 @output:`{lng, lat}`
 
 ### 某平台独有函数
@@ -65,11 +68,13 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 * 经纬度坐标转平面坐标`lnglatToPoint`
 
 @input: `{lng, lat}`
+
 @output:`(pointX, pointY)`
 
 * 平面坐标转经纬度坐标`pointToLnglat`
 
 @input: `(pointX, pointY)`
+
 @output:`{lng, lat}`
 
 ## 测试代码

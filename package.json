@@ -1,6 +1,6 @@
 {
   "name": "tile-lnglat-transform",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "tile coordinate and lnglat coordinate transform module",
   "main": "./builds/index.js",
   "scripts": {
