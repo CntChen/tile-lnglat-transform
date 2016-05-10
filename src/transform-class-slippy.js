@@ -1,6 +1,7 @@
 /*
  * Created by CntChen 2016.04.30
  * 参考资料：http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+ * 适用地图：高德，Google Map，OSM，
  */
 
 function _Math_sinh(x) {

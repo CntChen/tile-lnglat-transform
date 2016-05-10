@@ -40,14 +40,17 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 ### 通用转换函数 
 
 * 经纬度坐标转瓦片坐标 `lnglatToTile`
+
 @input: `(longitude, latitude, level)`
 @output:`{tileX, tileY}`
 
 * 经纬度坐标转像素坐标 `lnglatToPixel`
+
 @input: `(longitude, latitude, level)`
 @output:`{pixelX, pixelY}`
 
 * 瓦片的某一像素点坐标转经纬度坐标 `pixelToLnglat`
+
 @input: `(pixelX, pixelY, tileX, tileY, level)`
 @output:`{lng, lat}`
 
@@ -60,10 +63,12 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 #### 百度地图
 
 * 经纬度坐标转平面坐标`lnglatToPoint`
+
 @input: `{lng, lat}`
 @output:`(pointX, pointY)`
 
 * 平面坐标转经纬度坐标`pointToLnglat`
+
 @input: `(pointX, pointY)`
 @output:`{lng, lat}`
 
@@ -141,5 +146,9 @@ httponline1.map.bdimg.comonlinelabelqt=tile&x=6163&y=1280&z=15.png
 国内主要地图瓦片坐标系定义及计算原理
 >http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
 [国内主要地图瓦片坐标系定义及计算原理]:http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
+
+## log
+* 添加OSM转换对象 2016.05.10
+
 
 ## 完
