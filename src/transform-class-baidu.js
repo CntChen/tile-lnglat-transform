@@ -48,7 +48,7 @@ class TransformClassBaidu {
   pointToLnglat(pointX, pointY) {
     let point = new BMap.Pixel(pointX, pointY);
     let lnglat = this.projection.pointToLngLat(point);
- 
+
     // 不直接返回lnglat对象，因为该对象在百SDK中还有其他属性和方法
     // 提取对象的字段后，与其他地图平台统一Lnglat的格式
     return {

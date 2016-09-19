@@ -127,6 +127,7 @@ Extend(R, {
 
     // 对疑似bug的修改 start
     // by CntChen 2016.05.08
+    // @2016-09-19 已经得到官方确认为bug：https://cntchen.github.io/2016/05/09/%E7%99%BE%E5%BA%A6JavaScirpt%20%20API%E4%B8%AD%E7%BB%8F%E7%BA%AC%E5%BA%A6%E5%9D%90%E6%A0%87%E8%BD%AC%E7%93%A6%E7%89%87%E5%9D%90%E6%A0%87bug/
     if (!c)
       for (d = 0; d < this.Au.length; d++)
         if (b.lat <= -this.Au[d]) {
