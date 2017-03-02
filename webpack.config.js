@@ -5,19 +5,17 @@ var CleanPlugin = require('clean-webpack-plugin');
 
 var plugins = [
   new CleanPlugin('builds'),
-  // new webpack.optimize.CommonsChunkPlugin({
-  //   name: 'main',
-  //   children: true,
-  //   minChunks: 1,
-  // }),
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     compress: {
-  //         warnings: false
-  //     },
-  // })
 ];
 
-module.exports = {
+var pluginsWithMin = plugins.concat([
+  new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    },
+  })
+]);
+
+module.exports = [{
   entry: './src',
   output: {
     path: 'builds/',
@@ -33,4 +31,21 @@ module.exports = {
       loader: 'babel-loader',
     }, ],
   }
-};
+},
+{
+  entry: './src',
+  output: {
+    path: 'builds/',
+    filename: 'index.min.js',
+    libraryTarget: "umd",
+    library: 'TileLnglatTransform',
+  },
+  plugins: pluginsWithMin,
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      include: /src/,
+      loader: 'babel-loader',
+    }, ],
+  }
+}];
