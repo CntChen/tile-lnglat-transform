@@ -12,14 +12,14 @@
 *以node中使用为例。*
 
 1. 安装
-    ```
+    ```js
     $ npm tile-lnglat-transform
     // 或
     $ npm install git://github.com/CntChen/tile-lnglat-transform.git
     ```
 
 2. 使用
-    ```
+    ```js
     // 引入模块
     var TileLnglatTransform = require('tile-lnglat-transform');
     // 根据地图平台使用转换类
@@ -32,7 +32,7 @@
 
 ### 模块
 每个地图平台提供一个转换对象。如：
-```
+```js
 TileLnglatTransform.TileLnglatTransformGaode;
 TileLnglatTransform.TileLnglatTransformBaidu;
 ```
@@ -41,21 +41,21 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 
 * 经纬度坐标转瓦片坐标 `lnglatToTile`
 
-@input: `(longitude, latitude, level)`
+  @input: `(longitude, latitude, level)`
 
-@output:`{tileX, tileY}`
+  @output:`{tileX, tileY}`
 
 * 经纬度坐标转像素坐标 `lnglatToPixel`
 
-@input: `(longitude, latitude, level)`
+  @input: `(longitude, latitude, level)`
 
-@output:`{pixelX, pixelY}`
+  @output:`{pixelX, pixelY}`
 
 * 瓦片的某一像素点坐标转经纬度坐标 `pixelToLnglat`
 
-@input: `(pixelX, pixelY, tileX, tileY, level)`
+  @input: `(pixelX, pixelY, tileX, tileY, level)`
 
-@output:`{lng, lat}`
+  @output:`{lng, lat}`
 
 ### 某平台独有函数
 
@@ -67,15 +67,15 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 
 * 经纬度坐标转平面坐标`lnglatToPoint`
 
-@input: `{lng, lat}`
+  @input: `{lng, lat}`
 
-@output:`(pointX, pointY)`
+  @output:`(pointX, pointY)`
 
 * 平面坐标转经纬度坐标`pointToLnglat`
 
-@input: `(pointX, pointY)`
+  @input: `(pointX, pointY)`
 
-@output:`{lng, lat}`
+  @output:`{lng, lat}`
 
 ## 测试代码
 代码位于`/test/`中，提供了node和broswer的测试代码
