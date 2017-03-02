@@ -25,21 +25,14 @@ requirejs(['../builds/index'], function(TileLnglatTransform) {
   console.log('to pixel result:', pixel_gaode);
   var lnglat_gaode = TileLnglatTransformGaode.pixelToLnglat(pixel_gaode.pixelX, pixel_gaode.pixelY, tile_gaode.tileX, tile_gaode.tileY, level);
   console.log('to lnglat result:', lnglat_gaode);
-
+  console.log('\n');
 
   // test for Baidu map
   // test data from http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
-  // lnglat = {
-  //   lng: 116.404, 
-  //   lat: 39.915
-  // }
-  // level = 4;
   console.log('Baidu map test:');
   console.log('input lnglat:', lnglat, '\n', 'map level:', level);
   var point_baidu = TileLnglatTransformBaidu.lnglatToPoint(lnglat.lng, lnglat.lat);
   console.log('to point result:', point_baidu);
-  var lnglat_frompoint_baidu = TileLnglatTransformBaidu.pointToLnglat(point_baidu.pointX, point_baidu.pointY);
-  console.log('to lnglat from point result:', lnglat_frompoint_baidu);
   var tile_baidu = TileLnglatTransformBaidu.lnglatToTile(lnglat.lng, lnglat.lat, level);
   console.log('to tile result:', tile_baidu);
   console.log('verify url: http://online1.map.bdimg.com/onlinelabel/?qt=tile&x=' + tile_baidu.tileX + '&y=' + tile_baidu.tileY + '&z=' + level);
@@ -47,4 +40,6 @@ requirejs(['../builds/index'], function(TileLnglatTransform) {
   console.log('to pixel result:', pixel_baidu);
   var lnglat_baidu = TileLnglatTransformBaidu.pixelToLnglat(pixel_baidu.pixelX, pixel_baidu.pixelY, tile_baidu.tileX, tile_baidu.tileY, level);
   console.log('to lnglat result:', lnglat_baidu);
+  var lnglat_frompoint_baidu = TileLnglatTransformBaidu.pointToLnglat(point_baidu.pointX, point_baidu.pointY);
+  console.log('to lnglat from point result:', lnglat_frompoint_baidu);
 });
