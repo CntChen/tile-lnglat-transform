@@ -59,17 +59,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.TileLnglatTransformBaidu = exports.TileLnglatTransformOSM = exports.TileLnglatTransformGoogle = exports.TileLnglatTransformGaode = undefined;
+	exports.TileLnglatTransformTencent = exports.TileLnglatTransformBaidu = exports.TileLnglatTransformOSM = exports.TileLnglatTransformGoogle = exports.TileLnglatTransformGaode = undefined;
 
 	var _MapLevelRange;
 
-	var _transformClassSlippy = __webpack_require__(4);
+	var _transformClassSlippy = __webpack_require__(1);
 
 	var _transformClassSlippy2 = _interopRequireDefault(_transformClassSlippy);
 
 	var _transformClassBaidu = __webpack_require__(2);
 
 	var _transformClassBaidu2 = _interopRequireDefault(_transformClassBaidu);
+
+	var _transformClassOsgeoTms = __webpack_require__(4);
+
+	var _transformClassOsgeoTms2 = _interopRequireDefault(_transformClassOsgeoTms);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -84,7 +88,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Gaode: 'Gaode',
 	    Google: 'Google',
 	    Baidu: 'Baidu',
-	    OSM: 'OSM'
+	    OSM: 'OSM',
+	    Tencent: 'Tencent'
 	};
 
 	var MapLevelRange = (_MapLevelRange = {}, _defineProperty(_MapLevelRange, MapTypes.Gaode, {
@@ -99,22 +104,189 @@ return /******/ (function(modules) { // webpackBootstrap
 	}), _defineProperty(_MapLevelRange, MapTypes.Baidu, {
 	    min: 3,
 	    max: 18
+	}), _defineProperty(_MapLevelRange, MapTypes.Tencent, {
+	    min: 3,
+	    max: 19
 	}), _MapLevelRange);
 
 	var TileLnglatTransformGaode = new _transformClassSlippy2.default(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
 	var TileLnglatTransformGoogle = new _transformClassSlippy2.default(MapLevelRange[MapTypes.Google].max, MapLevelRange[MapTypes.Google].min);
 	var TileLnglatTransformOSM = new _transformClassSlippy2.default(MapLevelRange[MapTypes.OSM].max, MapLevelRange[MapTypes.OSM].min);
 
-	var TileLnglatTransformBaidu = new _transformClassBaidu2.default(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Google].min);
+	var TileLnglatTransformBaidu = new _transformClassBaidu2.default(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Baidu].min);
+
+	var TileLnglatTransformTencent = new _transformClassOsgeoTms2.default(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi);
 
 	// uglifyJS时保持字段名称
 	exports.TileLnglatTransformGaode = TileLnglatTransformGaode;
 	exports.TileLnglatTransformGoogle = TileLnglatTransformGoogle;
 	exports.TileLnglatTransformOSM = TileLnglatTransformOSM;
 	exports.TileLnglatTransformBaidu = TileLnglatTransformBaidu;
+	exports.TileLnglatTransformTencent = TileLnglatTransformTencent;
 
 /***/ },
-/* 1 */,
+/* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/*
+	 * Created by CntChen 2016.04.30
+	 * 参考资料：http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+	 * 适用地图：高德，Google Map，OSM
+	 */
+
+	function _Math_sinh(x) {
+	  return (Math.exp(x) - Math.exp(-x)) / 2;
+	}
+
+	var TransformClassNormal = function () {
+	  function TransformClassNormal(levelRange_max, LevelRange_min) {
+	    _classCallCheck(this, TransformClassNormal);
+
+	    this.levelMax = levelRange_max;
+	    this.levelMin = LevelRange_min;
+	  }
+
+	  /*
+	   * 某一瓦片等级下瓦片地图X轴(Y轴)上的瓦片数目
+	   */
+
+
+	  _createClass(TransformClassNormal, [{
+	    key: "_getMapSize",
+	    value: function _getMapSize(level) {
+	      return Math.pow(2, level);
+	    }
+
+	    /*
+	     * 分辨率，表示水平方向上一个像素点代表的真实距离(m)
+	     */
+
+	  }, {
+	    key: "getResolution",
+	    value: function getResolution(latitude, level) {
+	      var resolution = 6378137.0 * 2 * Math.PI * Math.cos(latitude) / 256 / this._getMapSize(level);
+	      return resolution;
+	    }
+	  }, {
+	    key: "_lngToTileX",
+	    value: function _lngToTileX(longitude, level) {
+	      var x = (longitude + 180) / 360;
+	      var tileX = Math.floor(x * this._getMapSize(level));
+	      return tileX;
+	    }
+	  }, {
+	    key: "_latToTileY",
+	    value: function _latToTileY(latitude, level) {
+	      var lat_rad = latitude * Math.PI / 180;
+	      var y = (1 - Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI) / 2;
+	      var tileY = Math.floor(y * this._getMapSize(level));
+
+	      // 代替性算法,使用了一些三角变化，其实完全等价
+	      //let sinLatitude = Math.sin(latitude * Math.PI / 180);
+	      //let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+	      //let tileY = Math.floor(y * this._getMapSize(level));
+
+	      return tileY;
+	    }
+
+	    /*
+	     * 从经纬度获取某一级别瓦片坐标编号
+	     */
+
+	  }, {
+	    key: "lnglatToTile",
+	    value: function lnglatToTile(longitude, latitude, level) {
+	      var tileX = this._lngToTileX(longitude, level);
+	      var tileY = this._latToTileY(latitude, level);
+
+	      return {
+	        tileX: tileX,
+	        tileY: tileY
+	      };
+	    }
+	  }, {
+	    key: "_lngToPixelX",
+	    value: function _lngToPixelX(longitude, level) {
+	      var x = (longitude + 180) / 360;
+	      var pixelX = Math.round(x * this._getMapSize(level) * 256 % 256);
+
+	      return pixelX;
+	    }
+	  }, {
+	    key: "_latToPixelY",
+	    value: function _latToPixelY(latitude, level) {
+	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
+	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+	      var pixelY = Math.round(y * this._getMapSize(level) * 256 % 256);
+
+	      return pixelY;
+	    }
+
+	    /*
+	     * 从经纬度获取点在某一级别瓦片中的像素坐标
+	     */
+
+	  }, {
+	    key: "lnglatToPixel",
+	    value: function lnglatToPixel(longitude, latitude, level) {
+	      var pixelX = this._lngToPixelX(longitude, level);
+	      var pixelY = this._latToPixelY(latitude, level);
+
+	      return {
+	        pixelX: pixelX,
+	        pixelY: pixelY
+	      };
+	    }
+	  }, {
+	    key: "_pixelXTolng",
+	    value: function _pixelXTolng(pixelX, tileX, level) {
+	      var pixelXToTileAddition = pixelX / 256.0;
+	      var lngitude = (tileX + pixelXToTileAddition) / this._getMapSize(level) * 360 - 180;
+
+	      return lngitude;
+	    }
+	  }, {
+	    key: "_pixelYToLat",
+	    value: function _pixelYToLat(pixelY, tileY, level) {
+	      var pixelYToTileAddition = pixelY / 256.0;
+	      var latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
+
+	      return latitude;
+	    }
+
+	    /*
+	     * 从某一瓦片的某一像素点到经纬度
+	     */
+
+	  }, {
+	    key: "pixelToLnglat",
+	    value: function pixelToLnglat(pixelX, pixelY, tileX, tileY, level) {
+	      var lng = this._pixelXTolng(pixelX, tileX, level);
+	      var lat = this._pixelYToLat(pixelY, tileY, level);
+
+	      return {
+	        lng: lng,
+	        lat: lat
+	      };
+	    }
+	  }]);
+
+	  return TransformClassNormal;
+	}();
+
+	exports.default = TransformClassNormal;
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -374,10 +546,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	// MercatorProjection
 	function fc() {}
 	fc.prototype.nh = function () {
-	  aa("lngLatToPoint方法未实现");
+	  aa("lngLatToPoint\u65B9\u6CD5\u672A\u5B9E\u73B0");
 	};
 	fc.prototype.wi = function () {
-	  aa("pointToLngLat方法未实现");
+	  aa("pointToLngLat\u65B9\u6CD5\u672A\u5B9E\u73B0");
 	};
 
 	function R() {}
@@ -432,6 +604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    } // 对疑似bug的修改 start
 	    // by CntChen 2016.05.08
+	    // @2016-09-19 已经得到官方确认为bug：https://cntchen.github.io/2016/05/09/%E7%99%BE%E5%BA%A6JavaScirpt%20%20API%E4%B8%AD%E7%BB%8F%E7%BA%AC%E5%BA%A6%E5%9D%90%E6%A0%87%E8%BD%AC%E7%93%A6%E7%89%87%E5%9D%90%E6%A0%87bug/
 	    if (!c) for (d = 0; d < this.Au.length; d++) {
 	      if (b.lat <= -this.Au[d]) {
 	        c = this.iG[d];
@@ -540,10 +713,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/*
-	 * Created by CntChen 2016.04.30
-	 * 参考资料：http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-	 * 适用地图：高德，Google Map，OSM，
+	 * Created by CntChen 2016.05.10
+	 * OSGEO TMS 标准，其坐标与Google瓦片坐标的tileY有差异
+	 * 对比：http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
+	 * 标准：http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
+	 * 适用地图：腾讯
 	 */
+
+	// no done
 
 	function _Math_sinh(x) {
 	  return (Math.exp(x) - Math.exp(-x)) / 2;
@@ -589,12 +766,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_latToTileY",
 	    value: function _latToTileY(latitude, level) {
 	      var lat_rad = latitude * Math.PI / 180;
-	      var y = (1 - Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI) / 2;
+	      var y = (1 + Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI) / 2;
 	      var tileY = Math.floor(y * this._getMapSize(level));
 
 	      // 代替性算法,使用了一些三角变化，其实完全等价
 	      //let sinLatitude = Math.sin(latitude * Math.PI / 180);
-	      //let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+	      //let y = 0.5 + Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
 	      //let tileY = Math.floor(y * this._getMapSize(level));
 
 	      return tileY;
@@ -627,8 +804,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_latToPixelY",
 	    value: function _latToPixelY(latitude, level) {
 	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
-	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var pixelY = Math.round(y * this._getMapSize(level) * 256 % 256);
+	      var y = 0.5 + Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+	      var pixelY = 256 - Math.round(y * this._getMapSize(level) * 256 % 256);
 
 	      return pixelY;
 	    }
@@ -660,7 +837,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_pixelYToLat",
 	    value: function _pixelYToLat(pixelY, tileY, level) {
 	      var pixelYToTileAddition = pixelY / 256.0;
-	      var latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
+	      console.log(pixelYToTileAddition);
+	      var latitude = Math.atan(_Math_sinh(Math.PI * (-1 + 2 * (tileY + 1 - pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
 
 	      return latitude;
 	    }

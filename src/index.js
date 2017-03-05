@@ -8,6 +8,7 @@ const MapTypes = {
     Google: 'Google',
     Baidu: 'Baidu',
     OSM: 'OSM',
+    Tencent: 'Tencent',
 };
 
 const MapLevelRange = {
@@ -27,15 +28,22 @@ const MapLevelRange = {
         min: 3,
         max: 18,
     },
+    [MapTypes.Tencent]: {
+        min: 3,
+        max: 19,
+    },
 };
 
 import TransformClassSlippy from './transform-class-slippy';
-let TileLnglatTransformGaode = new TransformClassSlippy(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
-let TileLnglatTransformGoogle = new TransformClassSlippy(MapLevelRange[MapTypes.Google].max, MapLevelRange[MapTypes.Google].min);
-let TileLnglatTransformOSM = new TransformClassSlippy(MapLevelRange[MapTypes.OSM].max, MapLevelRange[MapTypes.OSM].min);
+const TileLnglatTransformGaode = new TransformClassSlippy(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
+const TileLnglatTransformGoogle = new TransformClassSlippy(MapLevelRange[MapTypes.Google].max, MapLevelRange[MapTypes.Google].min);
+const TileLnglatTransformOSM = new TransformClassSlippy(MapLevelRange[MapTypes.OSM].max, MapLevelRange[MapTypes.OSM].min);
 
 import TransformClassBaidu from './transform-class-baidu';
-let TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Google].min);
+const TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Baidu].min);
+
+import TransformClassTencent from './transform-class-osgeo-tms';
+const TileLnglatTransformTencent = new TransformClassTencent(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi); 
 
 // uglifyJS时保持字段名称
 export {
@@ -43,4 +51,5 @@ export {
     TileLnglatTransformGoogle as TileLnglatTransformGoogle,
     TileLnglatTransformOSM as TileLnglatTransformOSM,
     TileLnglatTransformBaidu as TileLnglatTransformBaidu,
+    TileLnglatTransformTencent as TileLnglatTransformTencent,
 };

@@ -6,8 +6,8 @@
 var TileLnglatTransform = require('../builds/index');
 
 var TileLnglatTransformGaode = TileLnglatTransform.TileLnglatTransformGaode;
-var TileLnglatTransformGoogle = TileLnglatTransform.TileLnglatTransformGoogle;
 var TileLnglatTransformBaidu = TileLnglatTransform.TileLnglatTransformBaidu;
+var TileLnglatTransformTencent = TileLnglatTransform.TileLnglatTransformTencent;
 
 var lnglat = {
   lng: 113.3964152,
@@ -43,3 +43,16 @@ var lnglat_baidu = TileLnglatTransformBaidu.pixelToLnglat(pixel_baidu.pixelX, pi
 console.log('to lnglat result:', lnglat_baidu);
 var lnglat_frompoint_baidu = TileLnglatTransformBaidu.pointToLnglat(point_baidu.pointX, point_baidu.pointY);
 console.log('to lnglat from point result:', lnglat_frompoint_baidu);
+console.log('\n');
+
+// test for Tencent map
+console.log('Tencent map test:');
+console.log('input lnglat:', lnglat, '\n', 'map level:', level);
+var tile_gaode = TileLnglatTransformTencent.lnglatToTile(lnglat.lng, lnglat.lat, level);
+console.log('to tile result:', tile_gaode);
+console.log('verify url:http://rt1.map.gtimg.com/tile?z=' + level + '&x=' + tile_gaode.tileX + '&y=' + tile_gaode.tileY + '&styleid=1&version=117');
+var pixel_gaode = TileLnglatTransformTencent.lnglatToPixel(lnglat.lng, lnglat.lat, level);
+console.log('to pixel result:', pixel_gaode);
+var lnglat_gaode = TileLnglatTransformTencent.pixelToLnglat(pixel_gaode.pixelX, pixel_gaode.pixelY, tile_gaode.tileX, tile_gaode.tileY, level);
+console.log('to lnglat result:', lnglat_gaode);
+console.log('\n');

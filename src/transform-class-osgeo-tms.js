@@ -3,7 +3,7 @@
  * OSGEO TMS 标准，其坐标与Google瓦片坐标的tileY有差异
  * 对比：http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
  * 标准：http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
- * 适用地图：腾讯，
+ * 适用地图：腾讯
  */
 
  // no done
@@ -42,12 +42,12 @@ class TransformClassNormal {
 
   _latToTileY(latitude, level) {
     let lat_rad = latitude * Math.PI / 180;
-    let y = (1 - Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI)/2;
+    let y = (1 + Math.log(Math.tan(lat_rad) + 1 / Math.cos(lat_rad)) / Math.PI)/2;
     let tileY = Math.floor(y * this._getMapSize(level));
-
+     
     // 代替性算法,使用了一些三角变化，其实完全等价
     //let sinLatitude = Math.sin(latitude * Math.PI / 180);
-    //let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+    //let y = 0.5 + Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
     //let tileY = Math.floor(y * this._getMapSize(level));
 
     return tileY;
@@ -75,8 +75,8 @@ class TransformClassNormal {
 
   _latToPixelY(latitude, level) {
     let sinLatitude = Math.sin(latitude * Math.PI / 180);
-    let y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-    let pixelY = Math.round(y * this._getMapSize(level) * 256 % 256);
+    let y = 0.5 + Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
+    let pixelY = 256 - Math.round(y * this._getMapSize(level) * 256 % 256);
 
     return pixelY;
   }
@@ -103,7 +103,7 @@ class TransformClassNormal {
 
   _pixelYToLat(pixelY, tileY, level) {
     let pixelYToTileAddition = pixelY / 256.0;
-    let latitude = Math.atan(_Math_sinh(Math.PI * (1 - 2 * (tileY + pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
+    let latitude = Math.atan(_Math_sinh(Math.PI * (-1 + 2 * (tileY + 1 - pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
 
     return latitude;
   }
