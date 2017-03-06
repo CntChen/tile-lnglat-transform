@@ -160,7 +160,7 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 >http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
 [国内主要地图瓦片坐标系定义及计算原理]:http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
 
-[test-result](https://github.com/CntChen/tile-lnglat-transform/tree/master/test/test_result)
+[test-result]:https://github.com/CntChen/tile-lnglat-transform/tree/master/test/test_result
 
 ## log
 * 添加 OSM 转换对象 2016.05.10
