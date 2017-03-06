@@ -1,19 +1,20 @@
 /*
- * Created by CntChen 2016.05.10
+ * Created by CntChen 2017.03.06
  * OSGEO TMS 标准，其坐标与Google瓦片坐标的tileY有差异
- * 对比：http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
+ * 对比：http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection
+ *      http://2010.foss4g.org/presentations/3653.pdf 
+ * 转换：https://alastaira.wordpress.com/2011/07/06/converting-tms-tile-coordinates-to-googlebingosm-tile-coordinates/
  * 标准：http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
+ *      http://wiki.openstreetmap.org/wiki/TMS
  * 适用地图：腾讯
+ * http://blog.csdn.net/mygisforum/article/details/22997879
  */
-
- // no done
 
 function _Math_sinh(x) {
   return (Math.exp(x) - Math.exp(-x)) / 2;
 }
 
-
-class TransformClassNormal {
+class TransformClassTMS {
   constructor(levelRange_max, LevelRange_min) {
     this.levelMax = levelRange_max;
     this.levelMin = LevelRange_min;
@@ -122,4 +123,4 @@ class TransformClassNormal {
   }
 }
 
-export default TransformClassNormal;
+export default TransformClassTMS;

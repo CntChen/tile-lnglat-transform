@@ -298,7 +298,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created by CntChen 2016.05.04
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 坐标相关参考文章：http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 坐标相关参考文章：
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * http://www.cnblogs.com/janehlp/archive/2012/08/27/2658106.html
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * 适用地图：百度
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
@@ -713,22 +714,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/*
-	 * Created by CntChen 2016.05.10
+	 * Created by CntChen 2017.03.06
 	 * OSGEO TMS 标准，其坐标与Google瓦片坐标的tileY有差异
-	 * 对比：http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
+	 * 对比：http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection
+	 *      http://2010.foss4g.org/presentations/3653.pdf 
+	 * 转换：https://alastaira.wordpress.com/2011/07/06/converting-tms-tile-coordinates-to-googlebingosm-tile-coordinates/
 	 * 标准：http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification
+	 *      http://wiki.openstreetmap.org/wiki/TMS
 	 * 适用地图：腾讯
+	 * http://blog.csdn.net/mygisforum/article/details/22997879
 	 */
-
-	// no done
 
 	function _Math_sinh(x) {
 	  return (Math.exp(x) - Math.exp(-x)) / 2;
 	}
 
-	var TransformClassNormal = function () {
-	  function TransformClassNormal(levelRange_max, LevelRange_min) {
-	    _classCallCheck(this, TransformClassNormal);
+	var TransformClassTMS = function () {
+	  function TransformClassTMS(levelRange_max, LevelRange_min) {
+	    _classCallCheck(this, TransformClassTMS);
 
 	    this.levelMax = levelRange_max;
 	    this.levelMin = LevelRange_min;
@@ -739,7 +742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 
-	  _createClass(TransformClassNormal, [{
+	  _createClass(TransformClassTMS, [{
 	    key: "_getMapSize",
 	    value: function _getMapSize(level) {
 	      return Math.pow(2, level);
@@ -837,7 +840,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_pixelYToLat",
 	    value: function _pixelYToLat(pixelY, tileY, level) {
 	      var pixelYToTileAddition = pixelY / 256.0;
-	      console.log(pixelYToTileAddition);
 	      var latitude = Math.atan(_Math_sinh(Math.PI * (-1 + 2 * (tileY + 1 - pixelYToTileAddition) / this._getMapSize(level)))) * 180.0 / Math.PI;
 
 	      return latitude;
@@ -860,10 +862,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 
-	  return TransformClassNormal;
+	  return TransformClassTMS;
 	}();
 
-	exports.default = TransformClassNormal;
+	exports.default = TransformClassTMS;
 
 /***/ }
 /******/ ])

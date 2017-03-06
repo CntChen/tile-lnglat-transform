@@ -42,8 +42,8 @@ const TileLnglatTransformOSM = new TransformClassSlippy(MapLevelRange[MapTypes.O
 import TransformClassBaidu from './transform-class-baidu';
 const TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Baidu].min);
 
-import TransformClassTencent from './transform-class-osgeo-tms';
-const TileLnglatTransformTencent = new TransformClassTencent(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi); 
+import TransformClassTMS from './transform-class-osgeo-tms';
+const TileLnglatTransformTencent = new TransformClassTMS(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi); 
 
 // uglifyJS时保持字段名称
 export {

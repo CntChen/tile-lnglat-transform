@@ -1,6 +1,7 @@
 /*
  * Created by CntChen 2016.05.04
- * 坐标相关参考文章：http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
+ * 坐标相关参考文章：
+ * http://www.cnblogs.com/jz1108/archive/2011/07/02/2095376.html
  * http://www.cnblogs.com/janehlp/archive/2012/08/27/2658106.html
  * 适用地图：百度
  */
