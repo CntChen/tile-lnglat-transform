@@ -77,6 +77,22 @@ TileLnglatTransform.TileLnglatTransformBaidu;
 
   @output:`{lng, lat}`
 
+#### Bing 地图
+Bing 地图使用 [Slippy][Slippy] 方式，经纬度坐标和瓦片坐标转换与 Google 地图相同。
+不同的是 Bing 地图使用 quadkey(四叉树编码)来标识瓦片。
+
+* 瓦片坐标转四叉树编码`lnglatToQuadkey`
+
+@input: `tileX, tileY, level`
+
+@output: `quadkey`
+
+* 四叉树编码转瓦片坐标`quadkeyToLnglat`
+
+@input: `quadkey`
+
+@output: `{tileX, tileY, level}`
+
 ## 测试代码
 代码位于`/test/`中，提供了node和broswer的测试代码
 
@@ -123,10 +139,12 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 > http://mt2.google.cn/vt/lyrs=m@167000000&hl=zh-CN&gl=cn&x=26705&y=14226&z=15&s=Galil 
 * 腾讯地图
 > http://rt1.map.gtimg.com/tile?z=15&x=26705&y=18541&styleid=1&version=117
-
+* 必应地图
+> http://dynamic.t2.tiles.ditu.live.com/comp/ch/132122221
+030021?it=G,OS,L&mkt=en-us&cstl=w4c&ur=cn
 
 ## Todo
-* Bing Map 的转换
+* ~~Bing Map 的转换~~ `done`
 > https://msdn.microsoft.com/en-us/library/bb259689.aspx
 
 * 其他地图的转换
@@ -162,8 +180,12 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 
 [test-result]:https://github.com/CntChen/tile-lnglat-transform/tree/master/test/test_result
 
+[slient-links]:slient-links
+[Slippy]:http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
+
 ## log
 * 添加 OSM 转换对象 2016.05.10
 * 添加 TMS 转换对象，适用于腾讯地图 2017.03.07
+* 添加 Bing quadkey 转换 2017.03.14
 
 ## 完
