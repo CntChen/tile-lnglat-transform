@@ -140,8 +140,7 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 * 腾讯地图
 > http://rt1.map.gtimg.com/tile?z=15&x=26705&y=18541&styleid=1&version=117
 * 必应地图
-> http://dynamic.t2.tiles.ditu.live.com/comp/ch/132122221
-030021?it=G,OS,L&mkt=en-us&cstl=w4c&ur=cn
+> http://dynamic.t2.tiles.ditu.live.com/comp/ch/132122221030021?it=G,OS,L&mkt=en-us&cstl=w4c&ur=cn
 
 ## Todo
 * ~~Bing Map 的转换~~ `done`
