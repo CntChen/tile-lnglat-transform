@@ -4,34 +4,39 @@
  */
 
 const MapTypes = {
-    Gaode: 'Gaode',
-    Google: 'Google',
-    Baidu: 'Baidu',
-    OSM: 'OSM',
-    Tencent: 'Tencent',
+   Gaode: 'Gaode',
+   Google: 'Google',
+   Baidu: 'Baidu',
+   OSM: 'OSM',
+   Tencent: 'Tencent',
+   Bing: 'Bing',
 };
 
 const MapLevelRange = {
-    [MapTypes.Gaode]: {
-        min: 1,
-        max: 19,
-    },
-    [MapTypes.Google]: {
-        min: 0,
-        max: 21,
-    },
-    [MapTypes.OSM]: {
-        min: 0,
-        max: 19,
-    },
-    [MapTypes.Baidu]: {
-        min: 3,
-        max: 18,
-    },
-    [MapTypes.Tencent]: {
-        min: 3,
-        max: 19,
-    },
+  [MapTypes.Gaode]: {
+    min: 1,
+    max: 19,
+  },
+  [MapTypes.Google]: {
+    min: 0,
+    max: 21,
+  },
+  [MapTypes.OSM]: {
+    min: 0,
+    max: 19,
+  },
+  [MapTypes.Baidu]: {
+    min: 3,
+    max: 18,
+  },
+  [MapTypes.Tencent]: {
+    min: 3,
+    max: 19,
+  },
+  [MapTypes.Bing]: {
+    min: 3,
+    max: 19,
+  }
 };
 
 import TransformClassSlippy from './transform-class-slippy';
@@ -45,6 +50,9 @@ const TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[MapTypes.
 import TransformClassTMS from './transform-class-osgeo-tms';
 const TileLnglatTransformTencent = new TransformClassTMS(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi); 
 
+import TransformClassBing from './transform-class-bing';
+const TileLnglatTransformBing = new TransformClassBing(MapLevelRange[MapTypes.Bing].max, MapLevelRange[MapTypes.Bing].min);
+
 // uglifyJS时保持字段名称
 export {
     TileLnglatTransformGaode as TileLnglatTransformGaode,
@@ -52,4 +60,5 @@ export {
     TileLnglatTransformOSM as TileLnglatTransformOSM,
     TileLnglatTransformBaidu as TileLnglatTransformBaidu,
     TileLnglatTransformTencent as TileLnglatTransformTencent,
+    TileLnglatTransformBing as TileLnglatTransformBing,
 };

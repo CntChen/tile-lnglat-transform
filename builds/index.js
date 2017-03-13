@@ -57,9 +57,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
-	exports.TileLnglatTransformTencent = exports.TileLnglatTransformBaidu = exports.TileLnglatTransformOSM = exports.TileLnglatTransformGoogle = exports.TileLnglatTransformGaode = undefined;
+	exports.TileLnglatTransformBing = exports.TileLnglatTransformTencent = exports.TileLnglatTransformBaidu = exports.TileLnglatTransformOSM = exports.TileLnglatTransformGoogle = exports.TileLnglatTransformGaode = undefined;
 
 	var _MapLevelRange;
 
@@ -75,6 +75,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _transformClassOsgeoTms2 = _interopRequireDefault(_transformClassOsgeoTms);
 
+	var _transformClassBing = __webpack_require__(5);
+
+	var _transformClassBing2 = _interopRequireDefault(_transformClassBing);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -85,28 +89,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var MapTypes = {
-	    Gaode: 'Gaode',
-	    Google: 'Google',
-	    Baidu: 'Baidu',
-	    OSM: 'OSM',
-	    Tencent: 'Tencent'
+	  Gaode: 'Gaode',
+	  Google: 'Google',
+	  Baidu: 'Baidu',
+	  OSM: 'OSM',
+	  Tencent: 'Tencent',
+	  Bing: 'Bing'
 	};
 
 	var MapLevelRange = (_MapLevelRange = {}, _defineProperty(_MapLevelRange, MapTypes.Gaode, {
-	    min: 1,
-	    max: 19
+	  min: 1,
+	  max: 19
 	}), _defineProperty(_MapLevelRange, MapTypes.Google, {
-	    min: 0,
-	    max: 21
+	  min: 0,
+	  max: 21
 	}), _defineProperty(_MapLevelRange, MapTypes.OSM, {
-	    min: 0,
-	    max: 19
+	  min: 0,
+	  max: 19
 	}), _defineProperty(_MapLevelRange, MapTypes.Baidu, {
-	    min: 3,
-	    max: 18
+	  min: 3,
+	  max: 18
 	}), _defineProperty(_MapLevelRange, MapTypes.Tencent, {
-	    min: 3,
-	    max: 19
+	  min: 3,
+	  max: 19
+	}), _defineProperty(_MapLevelRange, MapTypes.Bing, {
+	  min: 3,
+	  max: 19
 	}), _MapLevelRange);
 
 	var TileLnglatTransformGaode = new _transformClassSlippy2.default(MapLevelRange[MapTypes.Gaode].max, MapLevelRange[MapTypes.Gaode].min);
@@ -117,12 +125,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var TileLnglatTransformTencent = new _transformClassOsgeoTms2.default(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi);
 
+	var TileLnglatTransformBing = new _transformClassBing2.default(MapLevelRange[MapTypes.Bing].max, MapLevelRange[MapTypes.Bing].min);
+
 	// uglifyJS时保持字段名称
 	exports.TileLnglatTransformGaode = TileLnglatTransformGaode;
 	exports.TileLnglatTransformGoogle = TileLnglatTransformGoogle;
 	exports.TileLnglatTransformOSM = TileLnglatTransformOSM;
 	exports.TileLnglatTransformBaidu = TileLnglatTransformBaidu;
 	exports.TileLnglatTransformTencent = TileLnglatTransformTencent;
+	exports.TileLnglatTransformBing = TileLnglatTransformBing;
 
 /***/ },
 /* 1 */
@@ -866,6 +877,99 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	exports.default = TransformClassTMS;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _transformClassSlippy = __webpack_require__(1);
+
+	var _transformClassSlippy2 = _interopRequireDefault(_transformClassSlippy);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Created by CntChen 2017.03.09
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 参考资料： https://msdn.microsoft.com/en-us/library/bb259689.aspx
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * 适用地图： bing 地图 
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               */
+
+	var TransformClassBing = function (_TransformClassSlippy) {
+	  _inherits(TransformClassBing, _TransformClassSlippy);
+
+	  function TransformClassBing(levelRange_max, LevelRange_min) {
+	    _classCallCheck(this, TransformClassBing);
+
+	    return _possibleConstructorReturn(this, (TransformClassBing.__proto__ || Object.getPrototypeOf(TransformClassBing)).call(this, levelRange_max, LevelRange_min));
+	  }
+
+	  _createClass(TransformClassBing, [{
+	    key: 'lnglatToQuadkey',
+	    value: function lnglatToQuadkey(tileX, tileY, level) {
+	      var tileX_binary = tileX.toString(2);
+	      var tileY_binary = tileY.toString(2);
+
+	      tileX_binary = '0'.repeat(level - tileX_binary.length) + tileX_binary;
+	      tileY_binary = '0'.repeat(level - tileY_binary.length) + tileY_binary;
+
+	      var key_binary = '';
+	      for (var index = 0; index < level; index++) {
+	        key_binary = key_binary + tileY_binary[index] + tileX_binary[index];
+	      }
+
+	      key_binary = key_binary.replace(/^0*/, '');
+	      var key_decimal = Number.parseInt(key_binary, 2);
+	      var quadkey = key_decimal.toString(4);
+
+	      return quadkey;
+	    }
+	  }, {
+	    key: 'quadkeyToLnglat',
+	    value: function quadkeyToLnglat(quadkey) {
+	      var level = quadkey.length;
+	      var key_decimal = Number.parseInt(quadkey, 4);
+	      var key_binary = key_decimal.toString(2);
+	      if (key_binary.length % 2 != 0) {
+	        key_binary = '0' + key_binary;
+	      }
+
+	      var tileY_binary = '';
+	      var tileX_binary = '';
+	      for (var index = 0; index < key_binary.length; index++) {
+	        if (index % 2 === 0) {
+	          tileY_binary = tileY_binary + key_binary[index];
+	        } else {
+	          tileX_binary = tileX_binary + key_binary[index];
+	        }
+	      }
+
+	      var tileY = Number.parseInt(tileY_binary, 2);
+	      var tileX = Number.parseInt(tileX_binary, 2);
+
+	      return {
+	        tileX: tileX,
+	        tileY: tileY,
+	        level: level
+	      };
+	    }
+	  }]);
+
+	  return TransformClassBing;
+	}(_transformClassSlippy2.default);
+
+	exports.default = TransformClassBing;
 
 /***/ }
 /******/ ])
