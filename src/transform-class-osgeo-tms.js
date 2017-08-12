@@ -69,7 +69,7 @@ class TransformClassTMS {
 
   _lngToPixelX(longitude, level) {
     let x = (longitude + 180) / 360;
-    let pixelX = Math.round(x * this._getMapSize(level) * 256 % 256);
+    let pixelX = Math.floor(x * this._getMapSize(level) * 256 % 256);
 
     return pixelX;
   }
@@ -77,7 +77,7 @@ class TransformClassTMS {
   _latToPixelY(latitude, level) {
     let sinLatitude = Math.sin(latitude * Math.PI / 180);
     let y = 0.5 + Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-    let pixelY = 256 - Math.round(y * this._getMapSize(level) * 256 % 256);
+    let pixelY = 255 - Math.floor(y * this._getMapSize(level) * 256 % 256);
 
     return pixelY;
   }

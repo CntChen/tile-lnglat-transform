@@ -88,7 +88,7 @@ class TransformClassBaidu {
   _lngToPixelX(longitude, level) {
     let tileX = this._lngToTileX(longitude, level);
     let point = this.lnglatToPoint(longitude, 0);
-    let pixelX = Math.round(point.pointX * this._getRetain(level) - tileX * 256);
+    let pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
 
     return pixelX;
   }
@@ -96,7 +96,7 @@ class TransformClassBaidu {
   _latToPixelY(latitude, level) {
     let tileY = this._latToTileY(latitude, level);
     let point = this.lnglatToPoint(0, latitude);
-    let pixelY = Math.round(point.pointY * this._getRetain(level) - tileY * 256);
+    let pixelY = Math.floor(point.pointY * this._getRetain(level) - tileY * 256);
 
     return pixelY;
   }

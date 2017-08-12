@@ -229,7 +229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_lngToPixelX",
 	    value: function _lngToPixelX(longitude, level) {
 	      var x = (longitude + 180) / 360;
-	      var pixelX = Math.round(x * this._getMapSize(level) * 256 % 256);
+	      var pixelX = Math.floor(x * this._getMapSize(level) * 256 % 256);
 
 	      return pixelX;
 	    }
@@ -238,7 +238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _latToPixelY(latitude, level) {
 	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
 	      var y = 0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var pixelY = Math.round(y * this._getMapSize(level) * 256 % 256);
+	      var pixelY = Math.floor(y * this._getMapSize(level) * 256 % 256);
 
 	      return pixelY;
 	    }
@@ -422,7 +422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _lngToPixelX(longitude, level) {
 	      var tileX = this._lngToTileX(longitude, level);
 	      var point = this.lnglatToPoint(longitude, 0);
-	      var pixelX = Math.round(point.pointX * this._getRetain(level) - tileX * 256);
+	      var pixelX = Math.floor(point.pointX * this._getRetain(level) - tileX * 256);
 
 	      return pixelX;
 	    }
@@ -431,7 +431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _latToPixelY(latitude, level) {
 	      var tileY = this._latToTileY(latitude, level);
 	      var point = this.lnglatToPoint(0, latitude);
-	      var pixelY = Math.round(point.pointY * this._getRetain(level) - tileY * 256);
+	      var pixelY = Math.floor(point.pointY * this._getRetain(level) - tileY * 256);
 
 	      return pixelY;
 	    }
@@ -558,10 +558,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	// MercatorProjection
 	function fc() {}
 	fc.prototype.nh = function () {
-	  aa("lngLatToPoint\u65B9\u6CD5\u672A\u5B9E\u73B0");
+	  aa("lngLatToPoint方法未实现");
 	};
 	fc.prototype.wi = function () {
-	  aa("pointToLngLat\u65B9\u6CD5\u672A\u5B9E\u73B0");
+	  aa("pointToLngLat方法未实现");
 	};
 
 	function R() {}
@@ -810,7 +810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_lngToPixelX",
 	    value: function _lngToPixelX(longitude, level) {
 	      var x = (longitude + 180) / 360;
-	      var pixelX = Math.round(x * this._getMapSize(level) * 256 % 256);
+	      var pixelX = Math.floor(x * this._getMapSize(level) * 256 % 256);
 
 	      return pixelX;
 	    }
@@ -819,7 +819,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _latToPixelY(latitude, level) {
 	      var sinLatitude = Math.sin(latitude * Math.PI / 180);
 	      var y = 0.5 + Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI);
-	      var pixelY = 256 - Math.round(y * this._getMapSize(level) * 256 % 256);
+	      var pixelY = 255 - Math.floor(y * this._getMapSize(level) * 256 % 256);
 
 	      return pixelY;
 	    }

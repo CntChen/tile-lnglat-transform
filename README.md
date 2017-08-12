@@ -93,6 +93,10 @@ Bing 地图使用 [Slippy][Slippy] 方式，经纬度坐标和瓦片坐标转换
 
 @output: `{tileX, tileY, level}`
 
+### 注意点
+#### 瓦片中像素坐标的取值
+瓦片的大小为 256 * 256，计算得到的瓦片中像素坐标取值为：**0 - 255**。
+
 ## 测试代码
 代码位于`/test/`中，提供了node和broswer的测试代码
 
@@ -183,6 +187,7 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 [Slippy]:http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
 
 ## log
+* 修复瓦片上像素坐标计算的 bug: [issue#5](https://github.com/CntChen/tile-lnglat-transform/issues/5#issuecomment-318644104), 感谢 [@lizecn](https://github.com/lizecn) 2017.08.12
 * 添加 OSM 转换对象 2016.05.10
 * 添加 TMS 转换对象，适用于腾讯地图 2017.03.07
 * 添加 Bing quadkey 转换 2017.03.14
