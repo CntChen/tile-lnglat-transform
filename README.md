@@ -179,7 +179,8 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 ## 参考资料
 国内主要地图瓦片坐标系定义及计算原理
 >http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
-[国内主要地图瓦片坐标系定义及计算原理]:http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
+
+[国内主要地图瓦片坐标系定义及计算原理]: http://cntchen.github.io/2016/05/09/国内主要地图瓦片坐标系定义及计算原理/
 
 [test-result]:https://github.com/CntChen/tile-lnglat-transform/tree/master/test/test_result
 
