@@ -1,5 +1,5 @@
 ## tile-lnglat-transform
->提供了高德、百度、谷歌和腾讯地图的经纬度坐标与瓦片坐标的相互转换
+>提供了高德、百度、谷歌、腾讯和必应地图的经纬度坐标与瓦片坐标的相互转换
 
 ## 特点
 * 实现了国内常用地图的经纬度坐标与瓦片坐标的相互转换
@@ -132,7 +132,15 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 ```
 高德地图_labeled.png
 ```
-并在各个瓦片的像素坐标处作红色标记。该红色标记与经纬度标记做比较，可以验证经纬度到瓦片坐标和像素坐标转换的正确性。
+并在各个瓦片的像素坐标处作红点标记。该红色标记与经纬度标记做比较，可以验证经纬度到瓦片坐标和像素坐标转换的正确性。
+
+### 验证图例
+| 类型 | 地图上经纬度标注截图 | 转换后瓦片截图(图中红点标记) |
+| :-: | :-: | :-: |
+| 高德 | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/113.3964152_23.0581857_%E9%AB%98%E5%BE%B7%E4%BD%8D%E7%BD%AE.png?raw=true" height="256"/> | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/gaode_map_labeled.png?raw=true" height="256"/> |
+| 百度 | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/113.3964152_23.0581857_%E7%99%BE%E5%BA%A6%E4%BD%8D%E7%BD%AE.png?raw=true" height="256"/> | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/baidu_map_labeled.png?raw=true" height="256"/> |
+| google | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/113.3964152_23.0581857_Google%E4%BD%8D%E7%BD%AE.png?raw=true" height="256"/> | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/google_map_labeled.png?raw=true" height="256"/> |
+| 腾讯 | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/113.3964152_23.0581857_%E8%85%BE%E8%AE%AF%E4%BD%8D%E7%BD%AE.png?raw=true" height="256"/> | <img src="https://github.com/CntChen/tile-lnglat-transform/blob/master/test/test_result/tencent_map_labeled.png?raw=true" height="256"/> |
 
 ### 各地图查询接口示例
 * 高德地图
