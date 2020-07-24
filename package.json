@@ -5,7 +5,8 @@
   "main": "./builds/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test_node": "node test/test_node"
+    "test_node": "node test/test_node",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",

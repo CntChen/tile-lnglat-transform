@@ -179,7 +179,7 @@ var lnglat = {lng: 113.3964152,  lat: 23.0581857};
 
 4. 打包为UMD模块，打包结果路径为`/builds/index.js`
     ```
-    $ webpack
+    $ npm run build
     ```
 
 5. Pull request
