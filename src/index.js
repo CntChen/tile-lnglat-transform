@@ -48,7 +48,7 @@ import TransformClassBaidu from './transform-class-baidu';
 const TileLnglatTransformBaidu = new TransformClassBaidu(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Baidu].min);
 
 import TransformClassTMS from './transform-class-osgeo-tms';
-const TileLnglatTransformTencent = new TransformClassTMS(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi); 
+const TileLnglatTransformTencent = new TransformClassTMS(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].min); 
 
 import TransformClassBing from './transform-class-bing';
 const TileLnglatTransformBing = new TransformClassBing(MapLevelRange[MapTypes.Bing].max, MapLevelRange[MapTypes.Bing].min);
