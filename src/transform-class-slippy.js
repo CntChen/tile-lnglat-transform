@@ -33,6 +33,13 @@ class TransformClassNormal {
   _lngToTileX(longitude, level) {
     let x = (longitude + 180) / 360;
     let tileX = Math.floor(x * this._getMapSize(level));
+
+    /**
+     * 限定边界值, 解决 longitude=180 时边界值错误
+     * latitude 应该没问题, 因为 latitude 不会取到 90/-90
+     */
+    tileX = Math.min(tileX, Math.pow(2, level) - 1);
+
     return tileX;
   }
 
