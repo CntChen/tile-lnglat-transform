@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -123,7 +123,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var TileLnglatTransformBaidu = new _transformClassBaidu2.default(MapLevelRange[MapTypes.Baidu].max, MapLevelRange[MapTypes.Baidu].min);
 
-	var TileLnglatTransformTencent = new _transformClassOsgeoTms2.default(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].mi);
+	var TileLnglatTransformTencent = new _transformClassOsgeoTms2.default(MapLevelRange[MapTypes.Tencent].max, MapLevelRange[MapTypes.Tencent].min);
 
 	var TileLnglatTransformBing = new _transformClassBing2.default(MapLevelRange[MapTypes.Bing].max, MapLevelRange[MapTypes.Bing].min);
 
@@ -135,9 +135,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.TileLnglatTransformTencent = TileLnglatTransformTencent;
 	exports.TileLnglatTransformBing = TileLnglatTransformBing;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -193,6 +193,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _lngToTileX(longitude, level) {
 	      var x = (longitude + 180) / 360;
 	      var tileX = Math.floor(x * this._getMapSize(level));
+
+	      /**
+	       * 限定边界值, 解决 longitude=180 时边界值错误
+	       * latitude 应该没问题, 因为 latitude 不会取到 90/-90
+	       */
+	      tileX = Math.min(tileX, Math.pow(2, level) - 1);
+
 	      return tileX;
 	    }
 	  }, {
@@ -297,9 +304,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = TransformClassNormal;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -488,9 +495,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = TransformClassBaidu;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -558,10 +565,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	// MercatorProjection
 	function fc() {}
 	fc.prototype.nh = function () {
-	  aa("lngLatToPoint方法未实现");
+	  aa("lngLatToPoint\u65B9\u6CD5\u672A\u5B9E\u73B0");
 	};
 	fc.prototype.wi = function () {
-	  aa("pointToLngLat方法未实现");
+	  aa("pointToLngLat\u65B9\u6CD5\u672A\u5B9E\u73B0");
 	};
 
 	function R() {}
@@ -710,9 +717,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = BMap;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
@@ -774,6 +781,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _lngToTileX(longitude, level) {
 	      var x = (longitude + 180) / 360;
 	      var tileX = Math.floor(x * this._getMapSize(level));
+
+	      /**
+	       * 限定边界值, 解决 longitude=180 时边界值错误
+	       */
+	      tileX = Math.min(tileX, Math.pow(2, level) - 1);
+
 	      return tileX;
 	    }
 	  }, {
@@ -878,9 +891,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = TransformClassTMS;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -971,7 +984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = TransformClassBing;
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
